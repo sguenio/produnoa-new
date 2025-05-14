@@ -21,16 +21,20 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt(['Email' => $credenciales['email'], 'Contraseña' => $credenciales['password']])) {
-            return redirect()->route('dashboard'); // Redirigir a un dashboard
+        // Autenticación con la columna correcta en la DB
+        if (Auth::attempt(['Email' => $credenciales['email'], 'password' => $credenciales['password']])) {
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
         }
 
         return back()->withErrors(['email' => 'Credenciales incorrectas']);
     }
 
-    public function cerrarSesion()
+    public function cerrarSesion(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('login');
     }
 }
