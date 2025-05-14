@@ -21,13 +21,21 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        // Autenticación con la columna correcta en la DB
-        if (Auth::attempt(['Email' => $credenciales['email'], 'password' => $credenciales['password']])) {
-            $request->session()->regenerate();
-            return redirect()->route('dashboard');
+        // Verificar si el usuario existe en la base de datos
+        $usuario = \App\Models\Usuario::where('Email', $credenciales['email'])->first();
+
+        if (!$usuario) {
+            return back()->withErrors(['email' => 'Este usuario no está registrado.']);
         }
 
-        return back()->withErrors(['email' => 'Credenciales incorrectas']);
+        // Intentar autenticar al usuario con la contraseña
+        if (!Auth::attempt(['Email' => $credenciales['email'], 'password' => $credenciales['password']])) {
+            return back()->withErrors(['password' => 'La contraseña ingresada es incorrecta.']);
+        }
+
+        // Si todo es correcto, redirigir al Dashboard
+        $request->session()->regenerate();
+        return redirect()->route('dashboard');
     }
 
     public function cerrarSesion(Request $request)

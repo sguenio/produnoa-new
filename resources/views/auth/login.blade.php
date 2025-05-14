@@ -43,22 +43,29 @@
 
         <form action="{{ route('autenticar') }}" method="POST" class="w-full max-w-sm">
             @csrf
+
+            <!-- Campo de correo electrónico -->
             <div class="mb-4">
                 <label class="block text-gray-300 text-sm font-bold mb-2">Correo Electrónico</label>
                 <input type="email" name="email" placeholder="email@ejemplo.com"
                     class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring focus:ring-red-600"
                     required>
+                @error('email')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
             </div>
 
-            <!-- Contraseña y Olvidaste tu contraseña alineados -->
-            <div class="mb-4 flex justify-between items-center">
-                <div class="w-full">
-                    <label class="block text-gray-300 text-sm font-bold mb-2">Contraseña</label>
-                    <input type="password" name="password" placeholder="Contraseña"
-                        class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring focus:ring-red-600"
-                        required>
-                </div>
+            <!-- Campo de contraseña -->
+            <div class="mb-4">
+                <label class="block text-gray-300 text-sm font-bold mb-2">Contraseña</label>
+                <input type="password" name="password" placeholder="Contraseña"
+                    class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring focus:ring-red-600"
+                    required>
+                @error('password')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
             </div>
+
 
             <div class="mb-6 flex items-center">
                 <input type="checkbox" class="mr-2 bg-gray-700 border-none text-red-600">
