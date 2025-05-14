@@ -12,22 +12,28 @@
 
 <body class="flex h-screen bg-gray-900 text-white">
     <!-- Sección izquierda con imagen y capa oscura -->
-    <div class="hidden md:flex w-1/2 relative bg-cover bg-center"
+    <div class="hidden md:flex w-1/2 relative bg-cover bg-center flex flex-col justify-between p-10"
         style="background-image: url('{{ asset('img/login.jpg') }}');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
-        <div class="absolute top-10 left-10 z-20">
+        <div class="relative z-20">
             <a href="#" class="text-white font-bold text-4xl tracking-wide"
                 style="font-family: 'Nunito Sans', sans-serif; transform: scaleY(1.0);">
                 Produn<span class="text-red-600 font-bold">o</span>a
             </a>
         </div>
+
+        <!-- Texto añadido en la parte inferior izquierda -->
+        <div class="relative z-20 text-xl font-semibold text-gray-300">
+            <p>Unidad de registro documental de laboratorio central</p>
+            <p>División ingrediente</p>
+        </div>
+
     </div>
 
     <!-- Sección derecha con formulario -->
     <div class="w-full md:w-1/2 flex flex-col justify-center items-center px-10">
         <!-- Logo Produnoa -->
-        <h1 class="text-5xl font-bold mb-6"
-            style="font-family: 'Nunito Sans', sans-serif; transform: scaleY(1.0);">
+        <h1 class="text-5xl font-bold mb-6" style="font-family: 'Nunito Sans', sans-serif; transform: scaleY(1.0);">
             Produn<span class="text-red-600 font-bold">o</span>a
         </h1>
 
@@ -52,7 +58,6 @@
                         class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring focus:ring-red-600"
                         required>
                 </div>
-
             </div>
 
             <div class="mb-6 flex items-center">
@@ -65,7 +70,8 @@
             </button>
 
             <p class="mt-6 text-gray-400 text-sm text-center">
-                ¿No tienes una cuenta? <a href="#" class="text-red-600 font-semibold hover:underline">Regístrate
+                ¿No tienes una cuenta? <a href="#"
+                    class="text-red-600 font-semibold underline hover:text-red-500">Regístrate
                     aquí</a>
             </p>
         </form>
