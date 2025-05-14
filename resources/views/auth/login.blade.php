@@ -78,7 +78,7 @@
 
             <p class="mt-6 text-gray-400 text-sm text-center">
                 ¿No tienes una cuenta? <a href="#"
-                    class="text-red-600 font-semibold underline hover:text-red-500">Regístrate
+                    class="text-red-500 font-semibold underline hover:text-red-400">Regístrate
                     aquí</a>
             </p>
         </form>
