@@ -234,17 +234,54 @@
     </nav>
 
     <!-- Perfil del usuario -->
-    <div class="p-4 border-t border-gray-700 flex items-center">
+    <div class="p-4 flex flex-col items-center relative">
         @if (auth()->check() && auth()->user())
-            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-700 text-center text-lg">
-                {{ substr(auth()->user()->name, 0, 1) }}
-            </div>
-            <div class="ml-3">
-                <p class="text-sm font-semibold">{{ auth()->user()->name }}</p>
-                <p class="text-xs text-gray-400">{{ auth()->user()->email }}</p>
+            <!-- Botón de perfil con hover -->
+            <button id="profileDropdown"
+                class="w-full flex items-center justify-between rounded-md py-2 px-3 hover:bg-gray-600 transition relative">
+                <!-- Foto de perfil centrada -->
+                <div class="h-10 w-10 rounded-full bg-gray-700 text-white flex items-center justify-center text-lg">
+                    {{ substr(auth()->user()->Nombre, 0, 1) }}
+                </div>
+
+                <!-- Nombre y Apellido -->
+                <div class="flex flex-col text-left">
+                    <p class="text-sm font-semibold text-white">{{ auth()->user()->Nombre }}
+                        {{ auth()->user()->Apellido }}</p>
+                    <p class="text-xs text-gray-400">{{ auth()->user()->Email }}</p>
+                </div>
+
+                <!-- Ícono del dropdown -->
+                <svg id="dropdownIcon" class="w-4 h-4 transition-transform duration-200"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"></path>
+                </svg>
+            </button>
+
+            <!-- Opciones del menú (Dropdown con mismo ancho que el botón de perfil) -->
+            <div id="profileMenu"
+                class="absolute right-0 bottom-full mb-2 w-31 bg-gray-800 rounded-md shadow-lg hidden">
+                <a href="#" class="block py-2 px-3 text-sm text-white hover:bg-gray-700">Configuración</a>
+                <hr class="border-gray-600">
+                <a href="{{ route('logout') }}" class="block py-2 px-3 text-sm text-red-500 hover:bg-gray-700">Cerrar
+                    sesión</a>
             </div>
         @else
             <p class="text-gray-400 text-sm">No hay usuario autenticado</p>
         @endif
     </div>
 </div>
+
+<script>
+    document.getElementById("profileDropdown").addEventListener("click", function() {
+        let menu = document.getElementById("profileMenu");
+        let icon = document.getElementById("dropdownIcon");
+
+        // Alternar visibilidad del menú
+        menu.classList.toggle("hidden");
+
+        // Rotar el ícono cuando el menú esté abierto
+        icon.classList.toggle("rotate-180");
+    });
+</script>
