@@ -1,65 +1,56 @@
-<!DOCTYPE html>
-<html lang="es">
+{{-- resources/views/auth/login.blade.php (o la ruta donde tengas tu login) --}}
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-</head>
+@section('title', 'Iniciar Sesión')
 
-<body class="flex h-screen bg-gray-900 text-white">
-    <!-- Sección izquierda con imagen y capa oscura -->
-    <div class="hidden md:flex w-1/2 relative bg-cover bg-center flex flex-col justify-between p-10"
+@section('content')
+    {{-- El contenido que antes estaba directamente dentro de <body> ahora va aquí --}}
+
+    <div class="hidden md:flex w-1/2 relative bg-cover bg-center flex-col justify-between p-10"
         style="background-image: url('{{ asset('img/login.jpg') }}');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
         <div class="relative z-20">
-            <a href="#" class="text-white font-bold text-4xl tracking-wide"
+            {{-- El estilo de la fuente para el logo aquí puede ser redundante si ya se aplica al body, --}}
+            {{-- pero lo mantenemos por si quieres un control más específico o es diferente. --}}
+            <a href="{{ url('/') }}" class="text-white font-bold text-4xl tracking-wide"
                 style="font-family: 'Nunito Sans', sans-serif; transform: scaleY(1.0);">
                 Produn<span class="text-red-600 font-bold">o</span>a
             </a>
         </div>
 
-        <!-- Texto añadido en la parte inferior izquierda -->
         <div class="relative z-20 text-xl font-semibold text-gray-300">
             <p>Unidad de registro documental de laboratorio central</p>
             <p>División ingrediente</p>
         </div>
-
     </div>
 
-    <!-- Sección derecha con formulario -->
-    <div class="w-full md:w-1/2 flex flex-col justify-center items-center px-10">
-        <!-- Logo Produnoa -->
-        <h1 class="text-5xl font-bold mb-6" style="font-family: 'Nunito Sans', sans-serif; transform: scaleY(1.0);">
+    {{-- Añadido py-8 y overflow-y-auto para mejor manejo en pantallas pequeñas si el contenido crece --}}
+    <div class="w-full md:w-1/2 flex flex-col justify-center items-center px-10 py-8 overflow-y-auto">
+        <h1 class="text-5xl font-bold mb-6 text-white" {{-- text-white añadido por si acaso --}}
+            style="font-family: 'Nunito Sans', sans-serif; transform: scaleY(1.0);">
             Produn<span class="text-red-600 font-bold">o</span>a
         </h1>
 
-        <!-- Encabezado -->
-        <h2 class="text-2xl font-semibold mb-1">Inicia sesión con tu cuenta</h2>
+        <h2 class="text-2xl font-semibold mb-1 text-gray-100">Inicia sesión con tu cuenta</h2>
         <p class="text-gray-400 mb-6 text-sm">Ingresa tu mail y contraseña para iniciar sesión.</p>
 
         <form action="{{ route('autenticar') }}" method="POST" class="w-full max-w-sm">
             @csrf
 
-            <!-- Campo de correo electrónico -->
             <div class="mb-4">
                 <label class="block text-gray-300 text-sm font-bold mb-2">Correo Electrónico</label>
                 <input type="email" name="email" placeholder="email@ejemplo.com"
-                    class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring focus:ring-red-600"
+                    class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-600 focus:border-red-600 text-white"
                     required>
                 @error('email')
                     <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Campo de contraseña -->
             <div class="mb-4">
                 <label class="block text-gray-300 text-sm font-bold mb-2">Contraseña</label>
                 <input type="password" name="password" placeholder="Contraseña"
-                    class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring focus:ring-red-600"
+                    class="w-full p-3 border border-gray-700 bg-gray-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-600 focus:border-red-600 text-white"
                     required>
                 @error('password')
                     <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
@@ -68,21 +59,21 @@
 
 
             <div class="mb-6 flex items-center">
-                <input type="checkbox" class="mr-2 bg-gray-700 border-none text-red-600">
-                <label class="text-gray-400 text-sm">Recordarme</label>
+                <input type="checkbox" id="remember_me_login" name="remember"
+                    class="h-4 w-4 rounded border-gray-600 bg-gray-700 text-red-600 focus:ring-red-500 focus:ring-offset-gray-900 mr-2">
+                <label for="remember_me_login" class="text-gray-400 text-sm">Recordarme</label>
             </div>
 
-            <button type="submit" class="w-full bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition">
+            <button type="submit"
+                class="w-full bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition duration-150 ease-in-out">
                 Iniciar sesión
             </button>
 
             <p class="mt-6 text-gray-400 text-sm text-center">
-                ¿No tienes una cuenta? <a href="#"
+                ¿No tienes una cuenta? <a href="#" {{-- Considera cambiar # por {{ route('register') }} si tienes una ruta de registro --}}
                     class="text-red-500 font-semibold underline hover:text-red-400">Regístrate
                     aquí</a>
             </p>
         </form>
     </div>
-</body>
-
-</html>
+@endsection
