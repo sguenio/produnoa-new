@@ -80,8 +80,8 @@
                 Productos
             </a>
             {{-- ... (resto de los ítems del sidebar usando las funciones PHP actualizadas) ... --}}
-            <a href="#" class="{{ getSidebarLinkClasses('categories.index') }}">
-                <svg class="{{ getSidebarIconClasses('categories.index') }}" xmlns="http://www.w3.org/2000/svg"
+            <a href="{{ route('categorias.index') }}" class="{{ getSidebarLinkClasses('categorias.*') }}">
+                <svg class="{{ getSidebarIconClasses('categorias.*') }}" xmlns="http://www.w3.org/2000/svg"
                     width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect width="7" height="7" x="3" y="3" rx="1" />

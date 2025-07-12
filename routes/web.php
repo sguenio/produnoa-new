@@ -6,6 +6,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\UnidadMedidaController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\CategoriaController;
 
 
 
@@ -23,6 +24,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
+// Rutas solo para usuarios autenticados
+Route::middleware(['auth'])->group(function () {
+    // La ruta para VER la lista de categorías está aquí (accesible para Admin y Operario)
+    Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
+});
+
 
 // 2. Añadimos las rutas para la administración de usuarios
 // Las envolvemos en un middleware de 'auth' para que solo usuarios logueados puedan acceder.
@@ -32,4 +39,5 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('marcas', MarcaController::class);
     Route::resource('unidades', UnidadMedidaController::class)->parameters(['unidades' => 'unidadMedida']);
     Route::resource('proveedores', ProveedorController::class)->parameters(['proveedores' => 'proveedor']);
+    Route::resource('categorias', CategoriaController::class)->except(['index']);
 });
