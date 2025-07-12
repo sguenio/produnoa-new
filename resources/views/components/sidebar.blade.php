@@ -93,20 +93,11 @@
                 </svg>
                 Categorías
             </a>
-            <a href="#" class="{{ getSidebarLinkClasses('brands.index') }}">
-                <svg class="{{ getSidebarIconClasses('brands.index') }}" xmlns="http://www.w3.org/2000/svg"
-                    width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
-                    <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
-                </svg>
-                Marcas
-            </a>
+
             <a href="#" class="{{ getSidebarLinkClasses('uom.index') }}">
-                <svg class="{{ getSidebarIconClasses('uom.index') }}" xmlns="http://www.w3.org/2000/svg"
-                    width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="{{ getSidebarIconClasses('uom.index') }}" xmlns="http://www.w3.org/2000/svg" width="18"
+                    height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" />
                     <path d="m14.5 12.5 2-2" />
@@ -228,8 +219,16 @@
                     Usuarios
                 </a>
 
-                {{-- Aquí irían otros enlaces de administración en el futuro --}}
-                {{-- <a href="#" class="...">Otro Enlace Admin</a> --}}
+                <a href="{{ route('marcas.index') }}" class="{{ getSidebarLinkClasses('marcas.*') }}">
+                    <svg class="{{ getSidebarIconClasses('marcas.*') }}" xmlns="http://www.w3.org/2000/svg"
+                        width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                    </svg>
+                    Marcas
+                </a>
+
             </div>
         @endif
     </nav>

@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\MarcaController;
+
 
 
 Route::get('/', function () {
@@ -25,4 +27,6 @@ Route::get('/dashboard', function () {
 // Ahora este grupo requiere que el usuario esté autenticado Y que sea administrador
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('usuarios', UsuarioController::class);
+    Route::resource('marcas', MarcaController::class);
+
 });
