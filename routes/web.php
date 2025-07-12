@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\UnidadMedidaController;
+use App\Http\Controllers\ProveedorController;
 
 
 
@@ -30,5 +31,5 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('usuarios', UsuarioController::class);
     Route::resource('marcas', MarcaController::class);
     Route::resource('unidades', UnidadMedidaController::class)->parameters(['unidades' => 'unidadMedida']);
-
+    Route::resource('proveedores', ProveedorController::class)->parameters(['proveedores' => 'proveedor']);
 });
