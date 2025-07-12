@@ -94,19 +94,7 @@
                 Categorías
             </a>
 
-            <a href="#" class="{{ getSidebarLinkClasses('uom.index') }}">
-                <svg class="{{ getSidebarIconClasses('uom.index') }}" xmlns="http://www.w3.org/2000/svg" width="18"
-                    height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" />
-                    <path d="m14.5 12.5 2-2" />
-                    <path d="m11.5 9.5 2-2" />
-                    <path d="m8.5 6.5 2-2" />
-                    <path d="m17.5 15.5 2-2" />
-                </svg>
-                Unidades de Medida
-            </a>
+
         </div>
 
         <div class="mt-3">
@@ -229,6 +217,15 @@
                     Marcas
                 </a>
 
+                <a href="{{ route('unidades.index') }}" class="{{ getSidebarLinkClasses('unidades.*') }}">
+                    <svg class="{{ getSidebarIconClasses('unidades.*') }}" xmlns="http://www.w3.org/2000/svg"
+                        width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    Unidades de Medida
+                </a>
             </div>
         @endif
     </nav>

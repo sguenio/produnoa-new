@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\MarcaController;
+use App\Http\Controllers\UnidadMedidaController;
 
 
 
@@ -28,5 +29,6 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('usuarios', UsuarioController::class);
     Route::resource('marcas', MarcaController::class);
+    Route::resource('unidades', UnidadMedidaController::class)->parameters(['unidades' => 'unidadMedida']);
 
 });
