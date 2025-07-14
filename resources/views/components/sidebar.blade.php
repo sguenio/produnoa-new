@@ -42,6 +42,28 @@
             </a>
         </div>
 
+        {{-- Sección de Datos Maestros (Visible para ambos roles) --}}
+        <div>
+            <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Datos Maestros</p>
+            {{-- ENLACE A CATEGORÍAS CORREGIDO --}}
+            <a href="{{ route('categorias.index') }}"
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150
+                      {{ request()->routeIs('categorias.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('categorias.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="7" height="7" x="3" y="3" rx="1" />
+                    <rect width="7" height="7" x="3" y="14" rx="1" />
+                    <path d="M14 4h7" />
+                    <path d="M14 9h7" />
+                    <path d="M14 15h7" />
+                    <path d="M14 20h7" />
+                </svg>
+                Categorías
+            </a>
+        </div>
+
+
         {{-- Sección de Administración (Solo para Admins) --}}
         @if (Auth::check() && Auth::user()->rol === 'Administrador')
             <div>
@@ -74,7 +96,6 @@
                     </svg>
                     Proveedores
                 </a>
-                {{-- Aquí iremos añadiendo los demás enlaces de admin --}}
             </div>
         @endif
     </nav>

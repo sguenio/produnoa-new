@@ -4,26 +4,38 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\CategoriaController;
 
-// Rutas públicas y de autenticación
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// --- RUTAS PÚBLICAS Y DE AUTENTICACIÓN ---
+Route::get('/', fn() => redirect()->route('login'));
 Route::get('/login', [AuthController::class, 'mostrarLogin'])->name('login')->middleware('guest');
 Route::post('/autenticar', [AuthController::class, 'autenticar'])->name('autenticar');
 Route::post('/logout', [AuthController::class, 'cerrarSesion'])->name('logout');
 
-// Rutas que requieren autenticación
-Route::middleware('auth')->group(function () {
-    // Ruta del Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
-    // Rutas que además requieren ser Administrador
+// --- RUTAS PROTEGIDAS (Requieren iniciar sesión) ---
+Route::middleware('auth')->group(function () {
+
+    // Dashboard (accesible para todos los logueados)
+    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+
+    // Categorías (la lista es visible para todos, la gestión es solo para admins)
+    Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
+
+
+    // --- RUTAS SÓLO PARA ADMINISTRADORES ---
     Route::middleware('admin')->group(function () {
+        // Excluimos 'index' porque ya está definida arriba para todos los roles
+        Route::resource('categorias', CategoriaController::class)->except(['index']);
+
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('proveedores', ProveedorController::class)->parameters(['proveedores' => 'proveedor']);
-        // Aquí añadiremos las otras rutas de admin más adelante
+        // Aquí añadiremos el resto de los CRUDs de admin
     });
 });

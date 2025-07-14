@@ -10,7 +10,7 @@ class Categoria extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'categorias'; // Aseguramos el nombre correcto de la tabla
+    protected $table = 'categorias';
 
     protected $fillable = [
         'nombre',
