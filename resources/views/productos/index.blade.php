@@ -1,12 +1,26 @@
 @extends('layouts.app')
 @section('title', 'Productos')
+
 @section('breadcrumbs')
     <li class="inline-flex items-center"><a href="{{ route('dashboard') }}"
             class="text-slate-400 hover:text-red-500">Inicio</a></li>
     <li class="inline-flex items-center"><span class="mx-1 text-slate-500">/</span><span
             class="font-medium text-slate-200">Productos</span></li>
 @endsection
+
 @section('content')
+    {{-- 1. Definimos el mapa de colores UNA SOLA VEZ aquí arriba --}}
+    @php
+        $colors = [
+            'SABORIZANTES' => 'bg-blue-200 text-blue-800 hover:bg-blue-300',
+            'ACIDULANTES' => 'bg-green-200 text-green-800 hover:bg-green-300',
+            'COLORANTES' => 'bg-amber-200 text-amber-800 hover:bg-amber-300',
+            'EDULCORANTES' => 'bg-purple-200 text-purple-800 hover:bg-purple-300',
+            'JUGOS' => 'bg-orange-200 text-orange-800 hover:bg-orange-300',
+            'OTROS' => 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+        ];
+    @endphp
+
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-slate-100">Gestión de Productos</h1>
         <a href="{{ route('productos.create') }}"
@@ -17,8 +31,26 @@
             Crear Producto
         </a>
     </div>
+
+    {{-- Filtros por Categoría --}}
+    <div class="mb-4">
+        <span class="text-sm font-semibold text-slate-300 mr-3">Filtrar por categoría:</span>
+        <div class="inline-flex flex-wrap gap-2 mt-2 sm:mt-0">
+            <button
+                class="category-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-slate-600 text-white hover:bg-slate-500 transition-colors">
+                Todos
+            </button>
+            @foreach ($categorias as $categoria)
+                <button data-category="{{ $categoria->nombre }}"
+                    class="category-filter-btn px-3 py-1 text-xs font-medium rounded-full transition-colors {{ $colors[$categoria->nombre] ?? 'bg-gray-200 text-gray-800' }}">
+                    {{ $categoria->nombre }}
+                </button>
+            @endforeach
+        </div>
+    </div>
+
     <div class="overflow-x-auto bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6">
-        <table class="datatable w-full text-sm">
+        <table id="productsDataTable" class="datatable w-full text-sm">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -34,7 +66,13 @@
                         <td class="font-mono">{{ $producto->id }}</td>
                         <td>{{ $producto->codigo_interno }}</td>
                         <td>{{ $producto->nombre }}</td>
-                        <td>{{ $producto->categoria->nombre }}</td>
+                        <td>
+                            {{-- Ahora podemos usar la variable $colors aquí sin problemas --}}
+                            <span
+                                class="px-2 py-0.5 text-xs font-semibold rounded-full {{ $colors[$producto->categoria->nombre] ?? 'bg-gray-500 text-gray-100' }}">
+                                {{ $producto->categoria->nombre }}
+                            </span>
+                        </td>
                         <td class="text-center">
                             <div class="flex justify-center items-center space-x-2">
                                 <a href="{{ route('productos.edit', $producto->id) }}"

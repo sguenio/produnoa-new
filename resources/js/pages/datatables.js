@@ -1,15 +1,15 @@
-// resources/js/app.js
+// resources/js/pages/datatables.js
 
 // 1. Importamos las librerías desde nuestra carpeta local 'vendor'.
-import "./vendor/jquery.js";
-import "./vendor/dataTables.js";
-import "./vendor/dataTables.tailwindcss.js";
+import "../vendor/jquery.js";
+import DataTable from "../vendor/dataTables.js";
+import "../vendor/dataTables.tailwindcss.js";
 
-// 2. Usamos jQuery para esperar a que el documento esté completamente cargado.
-$(function () {
-    // 3. Buscamos todas las tablas con la clase "datatable".
+// 2. Creamos y exportamos la función de inicialización.
+export function initDataTables() {
+    console.log("Módulo DataTables cargado e inicializado.");
+
     $("table.datatable").each(function () {
-        // Guardamos la instancia de la tabla para poder manipularla.
         const dataTableInstance = new DataTable(this, {
             layout: {
                 topStart: "pageLength",
@@ -26,14 +26,15 @@ $(function () {
             ],
         });
 
-        // 4. Lógica de filtrado (SOLO si estamos en la tabla de productos).
+        // Lógica de filtrado (SOLO si estamos en la tabla de productos)
         if ($(this).attr("id") === "productsDataTable") {
             $(".category-filter-btn").on("click", function () {
                 const categoryFilter = $(this).data("category") || "";
 
-                // --- LA CORRECCIÓN DEFINITIVA PARA EL FILTRADO ---
-                // Creamos una búsqueda con "expresión regular" que busca la palabra exacta,
-                // ignorando cualquier espacio en blanco (\s*) al principio (^) o al final ($).
+                // --- INICIO: LA CORRECCIÓN DEFINITIVA ---
+
+                // Creamos una búsqueda con "expresión regular" que ignora los espacios en blanco
+                // al principio (^\s*) y al final (\s*$) de la celda.
                 const searchTerm = categoryFilter
                     ? "^\\s*" + categoryFilter + "\\s*$"
                     : "";
@@ -44,17 +45,19 @@ $(function () {
                     .search(searchTerm, true, false)
                     .draw();
 
-                // Estilo para el botón activo.
+                // --- FIN: LA CORRECCIÓN DEFINITIVA ---
+
+                // Estilo para el botón activo
                 $(".category-filter-btn").removeClass(
                     "ring-2 ring-red-500 scale-105"
                 );
                 $(this).addClass("ring-2 ring-red-500 scale-105");
             });
 
-            // Activar el filtro "Todos" por defecto al cargar la página.
+            // Activar el filtro "Todos" por defecto al cargar la página
             $(".category-filter-btn:first").addClass(
                 "ring-2 ring-red-500 scale-105"
             );
         }
     });
-});
+}

@@ -11,9 +11,14 @@ class ProductoController extends Controller
 {
     public function index()
     {
-        // Usamos with('categoria') para cargar la relación y evitar consultas N+1 (Eager Loading)
+        // Usamos with('categoria') para optimizar la consulta (Eager Loading)
         $productos = Producto::with('categoria')->get();
-        return view('productos.index', compact('productos'));
+
+        // Obtenemos todas las categorías para los botones de filtro
+        $categorias = Categoria::orderBy('nombre')->get();
+
+        // Pasamos ambas colecciones a la vista
+        return view('productos.index', compact('productos', 'categorias'));
     }
 
     public function create()
