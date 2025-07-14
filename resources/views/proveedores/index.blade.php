@@ -1,8 +1,9 @@
 @extends('layouts.app')
 @section('title', 'Proveedores')
 @section('breadcrumbs')
-    <li class="inline-flex items-center"><a href="{{ route('dashboard') }}"
-            class="text-slate-400 hover:text-red-500">Inicio</a></li>
+    <li class="inline-flex items-center">
+        <a href="{{ route('dashboard') }}" class="text-slate-400 hover:text-red-500">Inicio</a>
+    </li>
     <li class="inline-flex items-center"><span class="mx-1 text-slate-500">/</span><span class="font-medium text-slate-200"
             aria-current="page">Proveedores</span></li>
 @endsection
@@ -17,6 +18,7 @@
             Crear Proveedor
         </a>
     </div>
+    {{-- Contenedor responsivo para la tabla --}}
     <div class="overflow-x-auto bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6">
         <table class="datatable w-full text-sm">
             <thead>
@@ -35,8 +37,20 @@
                         <td class="font-mono">{{ $proveedor->id }}</td>
                         <td>{{ $proveedor->nombre }}</td>
                         <td>{{ $proveedor->telefono }}</td>
-                        <td>{{ $proveedor->email ?? 'Sin email' }}</td>
-                        <td>{{ $proveedor->direccion ?? 'Sin dirección' }}</td>
+                        <td>
+                            @if ($proveedor->email)
+                                {{ $proveedor->email }}
+                            @else
+                                <span class="italic text-slate-500">N/A</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($proveedor->direccion)
+                                {{ $proveedor->direccion }}
+                            @else
+                                <span class="italic text-slate-500">N/A</span>
+                            @endif
+                        </td>
                         <td class="text-center">
                             <div class="flex justify-center items-center space-x-2">
                                 <a href="{{ route('proveedores.edit', $proveedor->id) }}"
