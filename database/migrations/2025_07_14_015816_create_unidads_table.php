@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('unidad_medidas', function (Blueprint $table) {
+        // Le decimos explícitamente que la tabla se llama 'unidades' (en plural correcto)
+        Schema::create('unidades', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100)->unique();
+            $table->string('nombre', 50);
+            $table->string('abreviatura', 10)->unique();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('unidad_medidas');
+        Schema::dropIfExists('unidads');
     }
 };

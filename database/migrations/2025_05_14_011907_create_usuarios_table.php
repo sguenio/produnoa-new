@@ -7,17 +7,18 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUsuariosTable extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->string('Nombre', 100);
-            $table->string('Apellido', 100);
-            $table->enum('Rol', ['Administrador', 'Operario']);
-            $table->string('Email', 50)->unique();
-            $table->string('password'); // Nombre de columna corregido
-            $table->timestamps(); // Añade created_at y updated_at
-            $table->softDeletes(); // Añade deleted_at para borrado suave
+            $table->string('nombre');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->enum('rol', ['Operario', 'Administrador'])->default('Operario');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

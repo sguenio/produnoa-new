@@ -96,6 +96,22 @@
                     </svg>
                     Proveedores
                 </a>
+                <a href="{{ route('unidades.index') }}"
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 
+                          {{ request()->routeIs('unidades.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('unidades.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" />
+                        <path d="m14.5 12.5 2-2" />
+                        <path d="m11.5 9.5 2-2" />
+                        <path d="m8.5 6.5 2-2" />
+                        <path d="m17.5 15.5 2-2" />
+                    </svg>
+                    Unidades de Medida
+                </a>
             </div>
         @endif
     </nav>

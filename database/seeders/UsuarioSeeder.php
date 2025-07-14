@@ -4,37 +4,30 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash; // Importante para encriptar contraseñas
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // Crear usuario Administrador
-        DB::table('usuarios')->insert([
-            'Nombre' => 'Admin',
-            'Apellido' => 'Produnoa',
-            'Rol' => 'Administrador',
-            'Email' => 'admin@produnoa.com',
-            'password' => Hash::make('12345678'), // Encripta la contraseña
-            'created_at' => now(),
-            'updated_at' => now(),
+        // Usamos el modelo para crear, es una mejor práctica
+        // y nos aseguramos de que las contraseñas se encripten automáticamente
+        // gracias a la configuración del 'cast' en el modelo.
+        \App\Models\Usuario::create([
+            'nombre' => 'Admin General',
+            'email' => 'admin@produnoa.com',
+            'rol' => 'Administrador', // 'rol' en minúscula
+            'password' => '12345678', // Laravel lo encriptará automáticamente
         ]);
 
-        // Crear usuario Operario
-        DB::table('usuarios')->insert([
-            'Nombre' => 'Operario',
-            'Apellido' => 'Produnoa',
-            'Rol' => 'Operario',
-            'Email' => 'operario@produnoa.com',
-            'password' => Hash::make('12345678'), // Encripta la contraseña
-            'created_at' => now(),
-            'updated_at' => now(),
+        \App\Models\Usuario::create([
+            'nombre' => 'Operario de Prueba',
+            'email' => 'operario@produnoa.com',
+            'rol' => 'Operario', // 'rol' en minúscula
+            'password' => '12345678',
         ]);
     }
 }

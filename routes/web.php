@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\UnidadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,9 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         // Excluimos 'index' porque ya está definida arriba para todos los roles
         Route::resource('categorias', CategoriaController::class)->except(['index']);
-
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('proveedores', ProveedorController::class)->parameters(['proveedores' => 'proveedor']);
+        Route::resource('unidades', UnidadController::class)->parameters(['unidades' => 'unidad']);
+
         // Aquí añadiremos el resto de los CRUDs de admin
     });
 });
