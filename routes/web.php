@@ -7,6 +7,7 @@ use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\UnidadController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ParametroAnalisisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('proveedores', ProveedorController::class)->parameters(['proveedores' => 'proveedor']);
         Route::resource('unidades', UnidadController::class)->parameters(['unidades' => 'unidad']);
         Route::resource('productos', ProductoController::class);
+        Route::resource('parametros', ParametroAnalisisController::class)->parameters(['parametros' => 'parametroAnalisis']);
+
 
 
         // Aquí añadiremos el resto de los CRUDs de admin
