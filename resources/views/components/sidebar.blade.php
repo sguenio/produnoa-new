@@ -11,15 +11,21 @@
                 style="font-family: 'Nunito Sans', sans-serif; transform: scaleY(1.0);">
                 Produn<span class="text-red-500 font-bold">o</span>a
             </h1>
+<<<<<<< Updated upstream
         </div>
         <button @click="sidebarOpen = false"
             class="md:hidden text-slate-400 hover:text-red-500 focus:outline-none cursor-pointer">
+=======
+        </a>
+        <button @click="sidebarOpen = false" class="md:hidden text-slate-400 hover:text-red-500 focus:outline-none">
+>>>>>>> Stashed changes
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
     </div>
 
+<<<<<<< Updated upstream
     <nav class="flex-grow px-2 pt-2 pb-4 overflow-y-auto space-y-1">
         @php
             // Ajustamos las clases para el tema permanentemente oscuro
@@ -56,6 +62,21 @@
                 <svg class="{{ getSidebarIconClasses('dashboard') }}" xmlns="http://www.w3.org/2000/svg" width="18"
                     height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
                     stroke-linecap="round" stroke-linejoin="round">
+=======
+    {{-- Menú de Navegación --}}
+    <nav class="flex-grow px-2 pt-2 pb-4 overflow-y-auto space-y-4">
+
+        {{-- Sección General --}}
+        <div>
+            <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">General</p>
+            <a href="{{ route('dashboard') }}"
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150
+                      {{ request()->routeIs('dashboard') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+
+                <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('dashboard') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+>>>>>>> Stashed changes
                     <rect width="7" height="9" x="3" y="3" rx="1" />
                     <rect width="7" height="5" x="14" y="3" rx="1" />
                     <rect width="7" height="9" x="14" y="12" rx="1" />
@@ -65,6 +86,7 @@
             </a>
         </div>
 
+<<<<<<< Updated upstream
         <div class="mt-3">
             <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Gestión de Productos
             </p>
@@ -187,6 +209,18 @@
                     {{-- Añadido * para que se mantenga activo en sub-rutas --}}
                     <svg class="{{ getSidebarIconClasses('usuarios.index*') }}" xmlns="http://www.w3.org/2000/svg"
                         width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+=======
+        {{-- Sección de Administración (Solo para Admins) --}}
+        @if (Auth::check() && Auth::user()->rol === 'Administrador')
+            <div>
+                <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Administración
+                </p>
+                <a href="{{ route('usuarios.index') }}"
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 
+                          {{ request()->routeIs('usuarios.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('usuarios.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+>>>>>>> Stashed changes
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                         <path d="M16 3.128a4 4 0 0 1 0 7.744" />
@@ -195,6 +229,7 @@
                     </svg>
                     Usuarios
                 </a>
+<<<<<<< Updated upstream
 
                 <a href="{{ route('marcas.index') }}" class="{{ getSidebarLinkClasses('marcas.*') }}">
                     <svg class="{{ getSidebarIconClasses('marcas.*') }}" xmlns="http://www.w3.org/2000/svg"
@@ -220,6 +255,15 @@
                     <svg class="{{ getSidebarIconClasses('proveedores.*') }}" xmlns="http://www.w3.org/2000/svg"
                         width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+=======
+                <a href="{{ route('proveedores.index') }}"
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 
+                          {{ request()->routeIs('proveedores.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('proveedores.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+>>>>>>> Stashed changes
                         <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
                         <path d="M15 18H9" />
                         <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" />
@@ -228,7 +272,10 @@
                     </svg>
                     Proveedores
                 </a>
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             </div>
         @endif
     </nav>

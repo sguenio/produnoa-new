@@ -3,11 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuarioController;
+<<<<<<< Updated upstream
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\UnidadMedidaController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\CategoriaController;
 
+=======
+use App\Http\Controllers\ProveedorController;
+>>>>>>> Stashed changes
 
 
 Route::get('/', function () {
@@ -24,6 +28,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
+<<<<<<< Updated upstream
 // Rutas solo para usuarios autenticados
 Route::middleware(['auth'])->group(function () {
     // La ruta para VER la lista de categorías está aquí (accesible para Admin y Operario)
@@ -40,4 +45,18 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('unidades', UnidadMedidaController::class)->parameters(['unidades' => 'unidadMedida']);
     Route::resource('proveedores', ProveedorController::class)->parameters(['proveedores' => 'proveedor']);
     Route::resource('categorias', CategoriaController::class)->except(['index']);
+=======
+// Rutas que requieren autenticación
+Route::middleware('auth')->group(function () {
+    // Ruta del Dashboard
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    // Rutas que además requieren ser Administrador
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::resource('usuarios', UsuarioController::class);
+        Route::resource('proveedores', ProveedorController::class)->parameters(['proveedores' => 'proveedor']);        // Aquí añadiremos las otras rutas de admin más adelante
+    });
+>>>>>>> Stashed changes
 });

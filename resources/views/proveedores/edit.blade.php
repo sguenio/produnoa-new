@@ -19,7 +19,7 @@
                     <label for="nombre" class="block text-sm font-medium text-slate-300 mb-1">Nombre (Obligatorio)</label>
                     <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $proveedor->nombre) }}"
                         required
-                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 text-slate-200 rounded-md shadow-sm focus:ring-1 focus:ring-red-500 focus:border-red-500">
+                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
                     @error('nombre')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -29,7 +29,7 @@
                         (Obligatorio)</label>
                     <input type="text" id="telefono" name="telefono" value="{{ old('telefono', $proveedor->telefono) }}"
                         required
-                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 text-slate-200 rounded-md shadow-sm focus:ring-1 focus:ring-red-500 focus:border-red-500">
+                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
                     @error('telefono')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -37,7 +37,7 @@
                 <div>
                     <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Email (Opcional)</label>
                     <input type="email" id="email" name="email" value="{{ old('email', $proveedor->email) }}"
-                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 text-slate-200 rounded-md shadow-sm focus:ring-1 focus:ring-red-500 focus:border-red-500">
+                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
                     @error('email')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -47,8 +47,17 @@
                         (Opcional)</label>
                     <input type="text" id="direccion" name="direccion"
                         value="{{ old('direccion', $proveedor->direccion) }}"
-                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 text-slate-200 rounded-md shadow-sm focus:ring-1 focus:ring-red-500 focus:border-red-500">
+                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
                     @error('direccion')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="md:col-span-2">
+                    <label for="info_adicional" class="block text-sm font-medium text-slate-300 mb-1">Información Adicional
+                        (Opcional)</label>
+                    <textarea id="info_adicional" name="info_adicional" rows="3"
+                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">{{ old('info_adicional', $proveedor->info_adicional) }}</textarea>
+                    @error('info_adicional')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>

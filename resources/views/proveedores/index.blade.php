@@ -8,7 +8,7 @@
 @endsection
 @section('content')
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-slate-100">Proveedores</h1>
+        <h1 class="text-3xl font-bold text-slate-100">Gestión de Proveedores</h1>
         <a href="{{ route('proveedores.create') }}"
             class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,7 +17,7 @@
             Crear Proveedor
         </a>
     </div>
-    <div class="p-4 sm:p-6 bg-gray-800 shadow-lg rounded-lg">
+    <div class="overflow-x-auto bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6">
         <table class="datatable w-full text-sm">
             <thead>
                 <tr>
@@ -35,10 +35,8 @@
                         <td class="font-mono">{{ $proveedor->id }}</td>
                         <td>{{ $proveedor->nombre }}</td>
                         <td>{{ $proveedor->telefono }}</td>
-                        <td class="{{ !$proveedor->email ? 'italic' : '' }}">{{ $proveedor->email ?? 'Sin email' }}</td>
-                        <td class="{{ !$proveedor->direccion ? 'italic' : '' }}">
-                            {{ $proveedor->direccion ?? 'Sin dirección' }}</td>
-
+                        <td>{{ $proveedor->email ?? 'Sin email' }}</td>
+                        <td>{{ $proveedor->direccion ?? 'Sin dirección' }}</td>
                         <td class="text-center">
                             <div class="flex justify-center items-center space-x-2">
                                 <a href="{{ route('proveedores.edit', $proveedor->id) }}"

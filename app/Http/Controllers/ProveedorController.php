@@ -26,6 +26,10 @@ class ProveedorController extends Controller
             'telefono' => 'required|string|max:50',
             'email' => 'nullable|email|max:100',
             'direccion' => 'nullable|string|max:255',
+<<<<<<< Updated upstream
+=======
+            'info_adicional' => 'nullable|string',
+>>>>>>> Stashed changes
         ]);
 
         Proveedor::create($request->all());
@@ -44,6 +48,10 @@ class ProveedorController extends Controller
             'telefono' => 'required|string|max:50',
             'email' => 'nullable|email|max:100',
             'direccion' => 'nullable|string|max:255',
+<<<<<<< Updated upstream
+=======
+            'info_adicional' => 'nullable|string',
+>>>>>>> Stashed changes
         ]);
 
         $proveedor->update($request->all());

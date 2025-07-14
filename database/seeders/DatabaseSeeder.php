@@ -16,9 +16,7 @@ class DatabaseSeeder extends Seeder
         // Llama al seeder de usuarios que acabamos de crear
         $this->call([
             UsuarioSeeder::class,
-            // Aquí puedes añadir otros seeders en el futuro, por ejemplo:
-            // ProductoSeeder::class,
-            // CategoriaSeeder::class,
+            ProveedorSeeder::class, // <-- Añade esta línea
         ]);
     }
 }
