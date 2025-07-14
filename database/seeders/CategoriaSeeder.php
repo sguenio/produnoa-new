@@ -13,7 +13,7 @@ class CategoriaSeeder extends Seeder
     public function run(): void
     {
         $categorias = [
-            'SABORES',
+            'SABORIZANTES',
             'ACIDULANTES',
             'COLORANTES',
             'EDULCORANTES',
