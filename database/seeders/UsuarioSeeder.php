@@ -13,26 +13,22 @@ class UsuarioSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    // database/seeders/UsuarioSeeder.php
+    public function run(): void
     {
-        // Crear usuario Administrador
         DB::table('usuarios')->insert([
-            'Nombre' => 'Admin',
-            'Apellido' => 'Produnoa',
-            'Rol' => 'Administrador',
-            'Email' => 'admin@produnoa.com',
-            'password' => Hash::make('12345678'), // Encripta la contraseña
+            'nombre' => 'Admin General',
+            'email' => 'admin@ejemplo.com',
+            'password' => Hash::make('password'), // Cambia 'password' por una contraseña segura
+            'rol' => 'Administrador',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-
-        // Crear usuario Operario
         DB::table('usuarios')->insert([
-            'Nombre' => 'Operario',
-            'Apellido' => 'Produnoa',
-            'Rol' => 'Operario',
-            'Email' => 'operario@produnoa.com',
-            'password' => Hash::make('12345678'), // Encripta la contraseña
+            'nombre' => 'Operario de Prueba',
+            'email' => 'operario@ejemplo.com',
+            'password' => Hash::make('password'),
+            'rol' => 'Operario',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

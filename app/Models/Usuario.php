@@ -10,27 +10,8 @@ use Illuminate\Notifications\Notifiable;
 class Usuario extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
-
-    /**
-     * Especificamos el nombre de la tabla porque no sigue la convención de Laravel (users).
-     */
     protected $table = 'usuarios';
-
-    /**
-     * Los atributos que se pueden asignar masivamente.
-     */
-    protected $fillable = [
-        'Nombre',
-        'Apellido',
-        'Rol',
-        'Email',
-        'password',
-    ];
-
-    /**
-     * Los atributos que deben ocultarse en las serializaciones (al convertir a JSON).
-     */
-    protected $hidden = [
-        'password',
-    ];
+    protected $fillable = ['nombre', 'email', 'password', 'rol'];
+    protected $hidden = ['password', 'remember_token'];
+    protected $casts = ['email_verified_at' => 'datetime', 'password' => 'hashed'];
 }

@@ -9,13 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    // database/migrations/..._create_categorias_table.php
-
     public function up(): void
     {
-        Schema::create('categorias', function (Blueprint $table) {
+        Schema::create('proveedores', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100)->unique();
+            $table->string('nombre')->unique();
+            $table->string('direccion')->nullable();
+            $table->string('telefono', 50)->nullable();
+            $table->string('email')->nullable();
+            $table->text('info_adicional')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categorias');
+        Schema::dropIfExists('proveedors');
     }
 };

@@ -18,7 +18,7 @@ class CheckAdminRole
     {
         // 1. Verificamos si el usuario está autenticado y si su rol es 'Administrador'.
         //    Usamos Auth::user()->Rol porque así se llama la columna en tu tabla.
-        if (!Auth::check() || Auth::user()->Rol !== 'Administrador') {
+        if (!Auth::check() || Auth::user()->rol !== 'Administrador') {
             // 2. Si no es un administrador, le negamos el acceso.
             //    abort(403) muestra una página de error "Forbidden" (Prohibido).
             abort(403, 'Acceso no autorizado.');
