@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ParametroAnalisisController;
 use App\Http\Controllers\EspecificacionController;
 use App\Http\Controllers\RemitoController;
+use App\Http\Controllers\LoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 
     // Remitos (CRUD accesible para todos los logueados)
-    Route::resource('remitos', RemitoController::class); 
+    Route::resource('remitos', RemitoController::class);
+        Route::resource('lotes', LoteController::class); 
+
 
 
 
