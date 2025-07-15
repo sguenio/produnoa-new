@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UnidadSeeder::class,
             ProductoSeeder::class,
             ParametroAnalisisSeeder::class,
+            EspecificacionSeeder::class,
         ]);
     }
 }

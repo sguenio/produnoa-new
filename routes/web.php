@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\UnidadController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ParametroAnalisisController;
+use App\Http\Controllers\EspecificacionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('unidades', UnidadController::class)->parameters(['unidades' => 'unidad']);
         Route::resource('productos', ProductoController::class);
         Route::resource('parametros', ParametroAnalisisController::class)->parameters(['parametros' => 'parametroAnalisis']);
+
+        // --- RUTAS PARA GESTIONAR ESPECIFICACIONES DE UNA CATEGORÍA ---
+        Route::prefix('categorias/{categoria}/especificaciones')->name('categorias.especificaciones.')->group(function () {
+            Route::get('/', [EspecificacionController::class, 'index'])->name('index');
+            Route::post('/', [EspecificacionController::class, 'store'])->name('store');
+            Route::delete('/{especificacion}', [EspecificacionController::class, 'destroy'])->name('destroy');
+        });
 
 
 
