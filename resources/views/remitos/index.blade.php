@@ -1,6 +1,48 @@
 @extends('layouts.app')
 @section('title', 'Remitos')
 
+@push('styles')
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #printable-remito,
+            #printable-remito * {
+                visibility: visible;
+            }
+
+            #printable-remito {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            /* Estilos para forzar un tema claro en la impresión */
+            #printable-remito {
+                background-color: white !important;
+                color: black !important;
+            }
+
+            #printable-remito h3,
+            #printable-remito p,
+            #printable-remito span,
+            #printable-remito div,
+            #printable-remito td,
+            #printable-remito th {
+                color: black !important;
+                background-color: transparent !important;
+            }
+        }
+    </style>
+@endpush
+
 @section('breadcrumbs')
     <li class="inline-flex items-center"><a href="{{ route('dashboard') }}"
             class="text-slate-400 hover:text-red-500">Inicio</a></li>
@@ -9,8 +51,7 @@
 @endsection
 
 @section('content')
-    {{-- 1. Añadimos el estado de Alpine para controlar el modal --}}
-    <div x-data="{ showModal: false, modalObservaciones: '' }">
+    <div x-data="{ showModal: false, showObsModal: false, selectedRemito: null, modalObservaciones: '' }" @keydown.escape.window="showModal = false; showObsModal = false">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-slate-100">Recepción de Mercadería</h1>
             <a href="{{ route('remitos.create') }}"
@@ -40,13 +81,12 @@
                             <td>
                                 <div class="flex items-center gap-2">
                                     <span>{{ $remito->codigo_remito }}</span>
-                                    {{-- 2. Mostramos el icono SOLO si hay observaciones --}}
+                                    {{-- 2. AÑADIMOS EL BOTÓN DE OBSERVACIONES (SOLO SI EXISTEN) --}}
                                     @if ($remito->observaciones)
                                         <button
-                                            @click="showModal = true; modalObservaciones = `{{ e($remito->observaciones) }}`"
-                                            class="text-sky-400 hover:text-sky-300" title="Ver observaciones">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg">
+                                            @click="showObsModal = true; modalObservaciones = `{{ e($remito->observaciones) }}`"
+                                            class="text-sky-400 hover:text-sky-300" title="Ver observaciones del remito">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 5.523-4.477 10-10 10S1 17.523 1 12 5.477 2 11 2s10 4.477 10 10z">
                                                 </path>
@@ -59,14 +99,17 @@
                             <td>{{ $remito->fecha_recepcion->format('d/m/Y') }}</td>
                             <td class="text-center">
                                 <div class="flex justify-center items-center space-x-2">
-                                    <a href="#"
+                                    <button @click="selectedRemito = {{ Js::from($remito) }}; showModal = true"
                                         class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-sky-400 hover:bg-gray-700"
-                                        title="Ver Lotes">
+                                        title="Ver Remito Completo">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
                                         </svg>
-                                    </a>
+                                    </button>
                                     <a href="{{ route('remitos.edit', $remito->id) }}"
                                         class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-amber-400 hover:bg-gray-700"
                                         title="Editar">
@@ -97,29 +140,88 @@
             </table>
         </div>
 
-        {{-- 3. HTML para el Modal (inicialmente oculto) --}}
-        <div x-show="showModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4" x-cloak>
-            {{-- Contenido del Modal --}}
+        {{-- HTML para el Modal del Remito Virtual --}}
+        <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+            x-cloak>
             <div @click.outside="showModal = false"
+                class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+                <div class="p-8 text-gray-800 overflow-y-auto" id="printable-remito">
+                    <div class="flex justify-between items-start pb-4 border-b">
+                        <div>
+                            <h3 class="text-3xl font-bold text-gray-900" x-text="selectedRemito?.proveedor.nombre"></h3>
+                            <p class="text-sm text-gray-600"
+                                x-text="selectedRemito?.proveedor.direccion || 'Dirección no disponible'"></p>
+                            <p class="text-sm text-gray-600"
+                                x-text="selectedRemito?.proveedor.telefono || 'Teléfono no disponible'"></p>
+                        </div>
+
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Código de Remito</p>
+                            <p class="text-5xl font-bold font-mono text-gray-900"
+                                x-text="'' + (selectedRemito?.codigo_remito || '')"></p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-end mt-4">
+                        <p class="text-sm">Total de Lotes: <strong x-text="selectedRemito?.lotes.length || 0"></strong>
+                        </p>
+                        <p class="text-sm">Recibido el: <strong
+                                x-text="new Date(selectedRemito?.fecha_recepcion).toLocaleDateString('es-AR', { timeZone: 'UTC' })"></strong>
+                        </p>
+                    </div>
+                    <div class="mt-4 border-t pt-4 space-y-2">
+                        <template x-if="selectedRemito?.lotes.length > 0">
+                            <template x-for="lote in selectedRemito.lotes" :key="lote.id">
+                                <div class="p-3 border rounded-md flex justify-between items-center text-sm bg-gray-50">
+                                    <div>
+                                        <p class="font-bold text-gray-900" x-text="lote.producto.nombre"></p>
+                                        <p class="text-xs text-gray-500">Lote Proveedor: <span class="font-mono"
+                                                x-text="lote.lote_proveedor_codigo"></span></p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-semibold"
+                                            x-text="lote.cantidad_recibida + ' ' + lote.unidad.abreviatura"></p>
+                                        {{-- CORRECCIÓN: Se reemplaza el estado por la fecha de vencimiento --}}
+                                        <p class="text-xs text-gray-500">Vto: <span class="font-semibold"
+                                                x-text="new Date(lote.fecha_vencimiento).toLocaleDateString('es-AR', { timeZone: 'UTC' })"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <template x-if="!selectedRemito || selectedRemito.lotes.length === 0">
+                            <p class="text-sm text-center text-gray-500 py-6">Este remito aún no tiene lotes registrados.
+                            </p>
+                        </template>
+                    </div>
+                </div>
+                <div class="text-right p-4 bg-gray-100 rounded-b-lg no-print">
+                    <button @click="showModal = false"
+                        class="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200">Cancelar</button>
+                    <button @click="window.print()"
+                        class="py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 ml-2">Imprimir</button>
+                </div>
+            </div>
+        </div>
+
+        {{-- 3. AÑADIMOS EL HTML PARA EL MODAL DE OBSERVACIONES --}}
+        <div x-show="showObsModal" x-transition
+            class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4" x-cloak>
+            <div @click.outside="showObsModal = false"
                 class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg border border-gray-700">
                 <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
                     <h3 class="text-xl font-semibold text-slate-200">Observaciones del Remito</h3>
-                    <button @click="showModal = false" class="text-gray-400 hover:text-white">
+                    <button @click="showObsModal = false" class="text-gray-400 hover:text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
-                {{-- Aquí se muestra el contenido dinámico de la observación --}}
-                <div class="prose prose-invert max-w-none text-slate-300">
+                <div class="max-h-64 overflow-y-auto text-slate-300 whitespace-pre-wrap">
                     <p x-text="modalObservaciones"></p>
                 </div>
                 <div class="text-right mt-6">
-                    <button @click="showModal = false"
+                    <button @click="showObsModal = false"
                         class="py-2 px-4 border border-gray-600 rounded-md text-sm font-medium text-slate-200 hover:bg-gray-700">
                         Cerrar
                     </button>

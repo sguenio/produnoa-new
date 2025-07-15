@@ -10,7 +10,11 @@ class RemitoController extends Controller
 {
     public function index()
     {
-        $remitos = Remito::with('proveedor')->orderBy('fecha_recepcion', 'desc')->get();
+        // Cargamos las relaciones anidadas: proveedor, lotes, y de cada lote, su producto y unidad.
+        $remitos = Remito::with(['proveedor', 'lotes.producto', 'lotes.unidad'])
+            ->orderBy('fecha_recepcion', 'desc')
+            ->get();
+
         return view('remitos.index', compact('remitos'));
     }
 
