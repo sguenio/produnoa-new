@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ProductoSeeder::class,
             ParametroAnalisisSeeder::class,
             EspecificacionSeeder::class,
+            RemitoSeeder::class,
         ]);
     }
 }

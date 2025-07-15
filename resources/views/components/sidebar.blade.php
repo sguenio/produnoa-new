@@ -42,6 +42,26 @@
             </a>
         </div>
 
+        <div>
+            <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Recepción y Calidad
+            </p>
+            <a href="{{ route('remitos.index') }}"
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150
+                      {{ request()->routeIs('remitos.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('remitos.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    <path d="M12 11h4" />
+                    <path d="M12 16h4" />
+                    <path d="M8 11h.01" />
+                    <path d="M8 16h.01" />
+                </svg>
+                Remitos
+            </a>
+        </div>
+
         {{-- Sección de Datos Maestros (Visible para ambos roles) --}}
         <div>
             <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Datos Maestros</p>

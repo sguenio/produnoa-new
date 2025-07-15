@@ -9,6 +9,7 @@ use App\Http\Controllers\UnidadController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ParametroAnalisisController;
 use App\Http\Controllers\EspecificacionController;
+use App\Http\Controllers\RemitoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,10 @@ Route::middleware('auth')->group(function () {
 
     // Categorías (la lista es visible para todos, la gestión es solo para admins)
     Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
+
+    // Remitos (CRUD accesible para todos los logueados)
+    Route::resource('remitos', RemitoController::class); 
+
 
 
     // --- RUTAS SÓLO PARA ADMINISTRADORES ---
