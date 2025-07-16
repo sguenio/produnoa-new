@@ -22,7 +22,6 @@
                     <th>Analista</th>
                     <th>Versión</th>
                     <th>Resultado</th>
-                    <th class="text-center no-sort">Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,21 +44,6 @@
                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $resultadoClasses }}">
                                 {{ $analisis->resultado_general }}
                             </span>
-                        </td>
-                        <td class="text-center">
-                            {{-- Reutilizamos la vista de decisión para ver el detalle --}}
-                            <a href="{{ route('analisis.decision', $analisis->id) }}"
-                                class="bg-sky-600/50 hover:bg-sky-700/50 text-sky-300 font-bold py-1 px-3 rounded-lg inline-flex items-center text-xs"
-                                title="Ver Detalle del Análisis">
-                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                    </path>
-                                </svg>
-                                Ver
-                            </a>
                         </td>
                     </tr>
                 @endforeach

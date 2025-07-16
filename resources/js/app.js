@@ -1,13 +1,24 @@
-// Importamos las librerías desde nuestra carpeta local 'vendor' en el orden correcto
+// -----------------------------------------------------------------------------
+// IMPORTACIONES DE LIBRERÍAS
+// -----------------------------------------------------------------------------
+// Importamos las librerías desde nuestra carpeta local 'vendor' en el orden correcto.
+// Esta sintaxis simplemente ejecuta cada script, haciendo que jQuery ($) y
+// DataTable estén disponibles globalmente para los scripts que los necesiten.
+
 import "./vendor/jquery.js";
 import "./vendor/select2.min.js";
 import "./vendor/dataTables.js";
 import "./vendor/dataTables.tailwindcss.js";
 import "./vendor/dataTables.rowGroup.min.js";
 
-// Cuando el documento esté completamente cargado...
+// -----------------------------------------------------------------------------
+// INICIALIZADOR PRINCIPAL
+// -----------------------------------------------------------------------------
+// Usamos jQuery para esperar a que el documento esté completamente cargado.
 $(function () {
-    // Inicializador global para cualquier <select> con la clase .select2-enable
+    // --- 1. Lógica Global (se ejecuta en todas las páginas) ---
+
+    // Inicializador para cualquier <select> con la clase .select2-enable
     if ($(".select2-enable").length) {
         $(".select2-enable").select2({
             placeholder: "Seleccione una opción",
@@ -15,7 +26,9 @@ $(function () {
         });
     }
 
-    // Opciones por defecto para TODAS las DataTables de la aplicación
+    // --- 2. Lógica Específica para DataTables ---
+
+    // Opciones por defecto que compartirán todas nuestras DataTables
     const defaultDtOptions = {
         layout: {
             topStart: "pageLength",
@@ -27,41 +40,71 @@ $(function () {
         responsive: true,
         columnDefs: [
             {
-                targets: "no-sort",
+                targets: "no-sort", // Desactiva el ordenamiento en columnas con esta clase
                 orderable: false,
             },
         ],
     };
 
-    // Inicializador para CUALQUIER tabla con la clase .datatable
+    // Buscamos todas las tablas con la clase ".datatable" y las inicializamos una por una
     $("table.datatable").each(function () {
-        let options = { ...defaultDtOptions }; // Empezamos con las opciones por defecto
+        let options = { ...defaultDtOptions }; // Empezamos con una copia de las opciones por defecto
         const tableId = $(this).attr("id");
 
-        // --- LÓGICA ESPECIALIZADA POR TABLA ---
+        // --- AÑADIMOS CONFIGURACIONES ESPECIALES BASADAS EN EL ID DE LA TABLA ---
 
-        // Si la tabla es la de Lotes, añadimos la opción de agrupar filas
+        // Configuración para la tabla de Lotes (agrupación por remito)
         if (tableId === "lotesDataTable") {
             options.rowGroup = {
                 dataSrc: 3, // Agrupa por la columna 4 (índice 3), que es "Remito Asociado"
                 startRender: function (rows, group) {
-                    // Estilo para la fila del grupo
                     return $("<tr/>").append(
-                        '<td colspan="7" class="p-2 font-bold text-slate-200 bg-gray-900/50"> Remito: ' +
+                        '<td colspan="7" class="p-2 font-bold text-slate-200 bg-gray-900/50">Remito: ' +
                             group +
                             "</td>"
                     );
                 },
             };
-            options.order = [[3, "desc"]]; // Ordena inicialmente por la columna de Remito
-            // Ocultamos la columna original de Remito porque ya se usa para agrupar
-            options.columnDefs.push({ targets: 3, visible: false });
+            options.order = [[3, "desc"]]; // Ordena por defecto por la columna de agrupación
+            options.columnDefs.push({ targets: 3, visible: false }); // Oculta la columna original
         }
 
-        // Inicializamos la tabla con sus opciones finales
+        // Configuración para la tabla de Historial de Análisis (agrupación por lote)
+        else if (tableId === "historialAnalisisTable") {
+            options.rowGroup = {
+                dataSrc: 2, // Agrupa por la columna 3 (índice 2), que es "Lote ID"
+                startRender: function (rows, group) {
+                    var rowData = rows.data()[0];
+                    var analisisId = rowData[0]; // ID del primer análisis del grupo
+                    var productName = rowData[3]; // Nombre del producto
+
+                    // Construimos la URL manualmente para evitar errores de Blade en JS
+                    var url = `/analisis/${analisisId}`;
+
+                    var title = `Lote: ${group} (${productName})`;
+                    var button = `<a href="${url}" class="ml-auto bg-sky-600/50 hover:bg-sky-700/50 text-sky-300 font-bold py-1 px-3 rounded-lg inline-flex items-center text-xs">Ver Timeline</a>`;
+
+                    // La suma de colspan es 6 (4 + 2), que coincide con las columnas visibles.
+                    return $('<tr class="dtrg-group"></tr>')
+                        .append(
+                            `<td colspan="4" class="px-6 py-4 font-bold text-slate-200">${title}</td>`
+                        )
+                        .append(
+                            `<td colspan="2" class="px-4 py-4 text-right">${button}</td>`
+                        );
+                },
+            };
+            options.order = [[2, "desc"]];
+            options.columnDefs.push({ targets: 2, visible: false });
+            // Oculta Lote ID y la columna Acciones
+        }
+
+        // Finalmente, inicializamos la tabla con sus opciones finales
         const dataTableInstance = new DataTable(this, options);
 
-        // Si la tabla es la de Productos, añadimos la lógica para los botones de filtro
+        // --- AÑADIMOS EVENTOS ESPECIALES DESPUÉS DE LA INICIALIZACIÓN ---
+
+        // Lógica de los botones de filtro solo para la tabla de Productos
         if (tableId === "productsDataTable") {
             $(".category-filter-btn").on("click", function () {
                 const categoryFilter = $(this).data("category") || "";
@@ -81,44 +124,6 @@ $(function () {
             $(".category-filter-btn:first").addClass(
                 "ring-2 ring-red-500 scale-105"
             );
-        }
-
-        if (tableId === "historialAnalisisTable") {
-            options.rowGroup = {
-                dataSrc: 2, // Agrupamos por la columna 3 (índice 2), que es "Lote ID"
-                startRender: function (rows, group) {
-                    // Obtenemos los datos de la primera fila de este grupo
-                    var rowData = rows.data()[0];
-                    // Obtenemos el nombre del producto de la columna 4 (índice 3)
-                    var productName = rowData[3];
-                    // Creamos el título del grupo combinado
-                    return $("<tr/>").append(
-                        '<td colspan="8" class="p-2 font-bold text-slate-200 bg-gray-900/50">Lote: ' +
-                            group +
-                            " (" +
-                            productName +
-                            ")</td>"
-                    );
-                },
-            };
-            options.order = [[2, "desc"]]; // Ordena por la columna de agrupación
-            options.columnDefs.push({ targets: 2, visible: false });
-        }
-
-        // Si la tabla es la de Lotes, usa la agrupación simple
-        else if (tableId === "lotesDataTable") {
-            options.rowGroup = {
-                dataSrc: 3,
-                startRender: function (rows, group) {
-                    return $("<tr/>").append(
-                        '<td colspan="7" class="p-2 font-bold text-slate-200 bg-gray-900/50">Remito: ' +
-                            group +
-                            "</td>"
-                    );
-                },
-            };
-            options.order = [[3, "desc"]];
-            options.columnDefs.push({ targets: 3, visible: false });
         }
     });
 });

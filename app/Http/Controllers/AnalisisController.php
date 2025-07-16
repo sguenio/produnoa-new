@@ -154,4 +154,14 @@ class AnalisisController extends Controller
 
         return view('analisis.historial', compact('analisisHistorial'));
     }
+
+    public function show(Analisis $analisis)
+    {
+        // La lógica es idéntica a la de showDecisionForm, solo que apunta a otra vista
+        $analisis->load(['lote.producto.categoria', 'lote.remito.proveedor', 'resultados.parametro.unidad', 'usuario']);
+        $especificaciones = \App\Models\Especificacion::where('categoria_id', $analisis->lote->producto->categoria_id)->get()->keyBy('parametro_id');
+
+        // Apuntamos a la nueva vista 'analisis.show'
+        return view('analisis.show', compact('analisis', 'especificaciones'));
+    }
 }
