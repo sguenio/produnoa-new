@@ -147,10 +147,9 @@ class AnalisisController extends Controller
 
     public function showHistory()
     {
-        // Buscamos TODOS los análisis y cargamos sus relaciones para mostrarlas en la tabla.
-        // Ordenamos por el más reciente primero.
         $analisisHistorial = Analisis::with(['lote.producto', 'usuario'])
-            ->orderBy('fecha_analisis', 'desc')
+            ->orderBy('lote_id', 'desc') // <-- Ordenar por Lote
+            ->orderBy('version', 'asc') // Luego por versión
             ->get();
 
         return view('analisis.historial', compact('analisisHistorial'));

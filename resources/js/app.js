@@ -82,5 +82,43 @@ $(function () {
                 "ring-2 ring-red-500 scale-105"
             );
         }
+
+        if (tableId === "historialAnalisisTable") {
+            options.rowGroup = {
+                dataSrc: 2, // Agrupamos por la columna 3 (índice 2), que es "Lote ID"
+                startRender: function (rows, group) {
+                    // Obtenemos los datos de la primera fila de este grupo
+                    var rowData = rows.data()[0];
+                    // Obtenemos el nombre del producto de la columna 4 (índice 3)
+                    var productName = rowData[3];
+                    // Creamos el título del grupo combinado
+                    return $("<tr/>").append(
+                        '<td colspan="8" class="p-2 font-bold text-slate-200 bg-gray-900/50">Lote: ' +
+                            group +
+                            " (" +
+                            productName +
+                            ")</td>"
+                    );
+                },
+            };
+            options.order = [[2, "desc"]]; // Ordena por la columna de agrupación
+            options.columnDefs.push({ targets: 2, visible: false });
+        }
+
+        // Si la tabla es la de Lotes, usa la agrupación simple
+        else if (tableId === "lotesDataTable") {
+            options.rowGroup = {
+                dataSrc: 3,
+                startRender: function (rows, group) {
+                    return $("<tr/>").append(
+                        '<td colspan="7" class="p-2 font-bold text-slate-200 bg-gray-900/50">Remito: ' +
+                            group +
+                            "</td>"
+                    );
+                },
+            };
+            options.order = [[3, "desc"]];
+            options.columnDefs.push({ targets: 3, visible: false });
+        }
     });
 });

@@ -81,8 +81,8 @@
                 Lotes
             </a>
             <a href="{{ route('analisis.index') }}"
-                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('analisis.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
-                <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('analisis.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs(['analisis.index', 'analisis.create', 'analisis.decision', 'analisis.show']) ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs(['analisis.index', 'analisis.create', 'analisis.decision', 'analisis.show']) ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path
@@ -177,7 +177,7 @@
                 </a>
                 <a href="{{ route('analisis.historial') }}"
                     class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 
-              {{ request()->routeIs('analisis.historial') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+             {{ request()->routeIs('analisis.historial') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                     <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('analisis.historial') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

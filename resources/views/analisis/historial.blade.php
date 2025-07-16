@@ -12,7 +12,7 @@
     <h1 class="text-3xl font-bold text-slate-100 mb-6">Historial de Todos los Análisis</h1>
 
     <div class="overflow-x-auto bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6">
-        <table class="datatable w-full text-sm">
+        <table class="datatable w-full text-sm" id="historialAnalisisTable">
             <thead>
                 <tr>
                     <th>ID Análisis</th>
