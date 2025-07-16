@@ -79,17 +79,22 @@
                             <td>{{ $lote->fecha_vencimiento->format('d/m/Y') }}</td>
                             <td class="text-center">
                                 <div class="flex justify-center items-center space-x-2">
-                                    <a href="#"
-                                        class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-sky-400 hover:bg-gray-700"
-                                        title="Realizar Análisis">
+
+                                    {{-- 1. BOTÓN "ANALIZAR" (habilitado solo si el estado es "En Cuarentena") --}}
+                                    <button
+                                        class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-sky-400 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-gray-700/50"
+                                        title="Realizar Análisis" {{ $lote->estado !== 'En Cuarentena' ? 'disabled' : '' }}
+                                        onclick="window.location.href='{{ route('analisis.create', $lote->id) }}'">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
                                             </path>
                                         </svg>
-                                    </a>
+                                    </button>
+
+                                    {{-- 2. BOTÓN "EDITAR" (siempre habilitado) --}}
                                     <a href="{{ route('lotes.edit', $lote->id) }}"
-                                        class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-amber-400 hover:bg-gray-700"
+                                        class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-amber-400 hover:bg-gray-700 transition-colors"
                                         title="Editar">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -97,11 +102,13 @@
                                             </path>
                                         </svg>
                                     </a>
+
+                                    {{-- 3. BOTÓN "ELIMINAR" (siempre habilitado) --}}
                                     <form action="{{ route('lotes.destroy', $lote->id) }}" method="POST"
                                         onsubmit="return confirm('¿Estás seguro?');">
                                         @csrf @method('DELETE')
                                         <button type="submit"
-                                            class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-red-500 hover:bg-gray-700"
+                                            class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-red-500 hover:bg-gray-700 transition-colors"
                                             title="Eliminar">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -110,8 +117,31 @@
                                             </svg>
                                         </button>
                                     </form>
+
+                                    {{-- 4. BOTÓN "MARCAR COMO AGOTADO" (al final, ícono representativo de caja tachada) --}}
+                                    <form action="{{ route('lotes.agotar', $lote->id) }}" method="POST"
+                                        onsubmit="return confirm('¿Confirmas que este lote se ha consumido por completo?');">
+                                        @csrf
+                                        <button type="submit"
+                                            class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-700/50 text-gray-400 hover:text-red-500 transition-colors
+                    disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-gray-700/50"
+                                            title="Marcar como Agotado"
+                                            {{ $lote->estado !== 'Listo para Producción' ? 'disabled' : '' }}>
+                                            {{-- Ícono: Caja tachada (archive-off) de Tabler Icons --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M8 4h11a2 2 0 1 1 0 4h-7m-4 0h-3a2 2 0 0 1 -.826 -3.822" />
+                                                <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 1.824 -1.18m.176 -3.82v-7" />
+                                                <path d="M10 12h2" />
+                                                <path d="M3 3l18 18" />
+                                            </svg>
+                                        </button>
+                                    </form>
+
                                 </div>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
@@ -127,7 +157,8 @@
                     <h3 class="text-xl font-semibold text-slate-200">Observaciones del Lote</h3>
                     <button @click="showModal = false" class="text-gray-400 hover:text-white"><svg class="w-6 h-6"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
                             </path>
                         </svg></button>
                 </div>

@@ -33,42 +33,36 @@ class AnalisisController extends Controller
     }
 
     // Guarda los resultados del análisis
+    // app/Http/Controllers/AnalisisController.php
+
     public function store(Request $request, Lote $lote)
     {
-        // Validación básica
         $request->validate([
             'resultados' => 'required|array',
             'resultados.*' => 'required',
             'observaciones' => 'nullable|string',
         ]);
 
+        // Usamos una transacción para asegurar que todo se guarde correctamente o no se guarde nada
         DB::transaction(function () use ($request, $lote) {
             $especificaciones = Especificacion::where('categoria_id', $lote->producto->categoria_id)->get()->keyBy('parametro_id');
             $todosPasan = true;
+            $resultadosAGuardar = [];
 
-            // Creamos el registro principal del análisis
-            $analisis = $lote->analisis()->create([
-                'usuario_id' => Auth::id(),
-                'version' => ($lote->analisis()->max('version') ?? 0) + 1,
-                'resultado_general' => 'Pasa', // Asumimos que pasa hasta que un parámetro falle
-                'fecha_analisis' => now(),
-                'observaciones' => $request->observaciones,
-            ]);
-
-            // Guardamos cada resultado individual
+            // 1. Primero, procesamos y validamos todos los resultados en memoria
             foreach ($request->resultados as $parametro_id => $valor_resultado) {
                 $especificacion = $especificaciones[$parametro_id] ?? null;
-                $aprueba = true; // Asumimos que aprueba
+                $aprueba = true; // Asumimos que aprueba por defecto
 
                 if ($especificacion) {
-                    if ($especificacion->valor_texto !== null) {
-                        // Validación por texto
+                    if (isset($especificacion->valor_texto)) {
+                        // Validación por texto (ignorando mayúsculas/minúsculas)
                         $aprueba = (strtolower($valor_resultado) == strtolower($especificacion->valor_texto));
                     } else {
                         // Validación numérica
                         $valor_resultado_num = floatval($valor_resultado);
-                        if (($especificacion->valor_minimo !== null && $valor_resultado_num < $especificacion->valor_minimo) ||
-                            ($especificacion->valor_maximo !== null && $valor_resultado_num > $especificacion->valor_maximo)
+                        if ((isset($especificacion->valor_minimo) && $valor_resultado_num < $especificacion->valor_minimo) ||
+                            (isset($especificacion->valor_maximo) && $valor_resultado_num > $especificacion->valor_maximo)
                         ) {
                             $aprueba = false;
                         }
@@ -76,21 +70,27 @@ class AnalisisController extends Controller
                 }
 
                 if (!$aprueba) {
-                    $todosPasan = false;
+                    $todosPasan = false; // Si uno falla, el resultado general falla
                 }
 
-                $analisis->resultados()->create([
+                $resultadosAGuardar[] = [
                     'parametro_id' => $parametro_id,
                     'valor_resultado' => $valor_resultado,
                     'aprueba' => $aprueba,
-                ]);
+                ];
             }
 
-            // Actualizamos el resultado general del análisis
-            if (!$todosPasan) {
-                $analisis->resultado_general = 'No Pasa';
-                $analisis->save();
-            }
+            // 2. Ahora, creamos el registro principal del análisis con el resultado general ya calculado
+            $analisis = $lote->analisis()->create([
+                'usuario_id' => Auth::id(),
+                'version' => ($lote->analisis()->max('version') ?? 0) + 1,
+                'resultado_general' => $todosPasan ? 'Pasa' : 'No Pasa',
+                'fecha_analisis' => now(),
+                'observaciones' => $request->observaciones,
+            ]);
+
+            // 3. Finalmente, guardamos los resultados individuales
+            $analisis->resultados()->createMany($resultadosAGuardar);
         });
 
         return redirect()->route('analisis.index')->with('success', 'Análisis del lote #' . $lote->id . ' guardado exitosamente.');
@@ -143,5 +143,16 @@ class AnalisisController extends Controller
         $lote->save();
 
         return redirect()->route('aprobaciones.index')->with('success', "El lote #{$lote->id} ha sido RECHAZADO.");
+    }
+
+    public function showHistory()
+    {
+        // Buscamos TODOS los análisis y cargamos sus relaciones para mostrarlas en la tabla.
+        // Ordenamos por el más reciente primero.
+        $analisisHistorial = Analisis::with(['lote.producto', 'usuario'])
+            ->orderBy('fecha_analisis', 'desc')
+            ->get();
+
+        return view('analisis.historial', compact('analisisHistorial'));
     }
 }

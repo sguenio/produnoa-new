@@ -66,7 +66,6 @@ class LoteController extends Controller
             'unidad_id' => 'required|exists:unidades,id',
             'fecha_elaboracion' => 'nullable|date',
             'fecha_vencimiento' => 'required|date|after_or_equal:fecha_elaboracion',
-            'estado' => 'required|in:En Cuarentena,Rechazado,Listo para Producción,Agotado',
             'observaciones' => 'nullable|string',
         ]);
 
@@ -79,5 +78,17 @@ class LoteController extends Controller
         // Aquí podríamos añadir lógica para no permitir borrar si ya fue analizado, etc.
         $lote->delete();
         return redirect()->route('lotes.index')->with('success', 'Lote eliminado exitosamente.');
+    }
+
+    public function marcarAgotado(Lote $lote)
+    {
+        // Una capa extra de seguridad: solo permite esta acción si el lote está listo para producción.
+        if ($lote->estado === 'Listo para Producción') {
+            $lote->estado = 'Agotado';
+            $lote->save();
+            return redirect()->route('lotes.index')->with('success', "El lote #{$lote->id} ha sido marcado como AGOTADO.");
+        }
+
+        return redirect()->route('lotes.index')->with('error', 'Esta acción no se puede realizar sobre este lote.');
     }
 }

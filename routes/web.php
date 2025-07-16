@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
     // Remitos (CRUD accesible para todos los logueados)
     Route::resource('remitos', RemitoController::class);
     Route::resource('lotes', LoteController::class);
+    Route::post('/lotes/{lote}/agotar', [LoteController::class, 'marcarAgotado'])->name('lotes.agotar'); 
+
 
     // --- RUTAS PARA EL FLUJO DE ANÁLISIS DE CALIDAD ---
     Route::get('/control-calidad', [AnalisisController::class, 'index'])->name('analisis.index');
@@ -75,6 +77,11 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [EspecificacionController::class, 'store'])->name('store');
             Route::delete('/{especificacion}', [EspecificacionController::class, 'destroy'])->name('destroy');
         });
+
+
+        // Historial de análisis
+        Route::get('/historial/analisis', [AnalisisController::class, 'showHistory'])->name('analisis.historial');
+
 
 
 

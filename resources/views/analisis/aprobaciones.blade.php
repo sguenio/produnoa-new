@@ -24,10 +24,14 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($lotesPendientes as $lote)
+                {{-- CAMBIO: Usamos @foreach en lugar de @forelse --}}
+                @foreach ($lotesPendientes as $lote)
                     <tr>
                         <td class="font-mono">{{ $lote->id }}</td>
-                        <td>{{ $lote->producto->nombre }}</td>
+                        <td>
+                            <div class="font-medium text-slate-200">{{ $lote->producto->nombre }}</div>
+                            <div class="text-xs text-slate-500">{{ $lote->producto->categoria->nombre }}</div>
+                        </td>
                         <td>{{ $lote->lote_proveedor_codigo }}</td>
                         <td>
                             @php
@@ -43,9 +47,7 @@
                             </span>
                         </td>
                         <td>{{ $ultimoAnalisis->fecha_analisis->format('d/m/Y H:i') }}</td>
-                        {{-- ... dentro del bucle @forelse ... --}}
                         <td class="text-center">
-                            {{-- La ruta ahora apunta a la nueva página de decisión, pasando el ID del último análisis --}}
                             <a href="{{ route('analisis.decision', $lote->analisis->first()->id) }}"
                                 class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-3 rounded-lg inline-flex items-center text-xs">
                                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,12 +58,8 @@
                             </a>
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="text-center p-4 text-slate-500">No hay lotes pendientes de aprobación.
-                        </td>
-                    </tr>
-                @endforelse
+                @endforeach
+                {{-- Ya no hay bloque @empty. Si no hay lotes, este bucle no imprime nada. --}}
             </tbody>
         </table>
     </div>

@@ -12,13 +12,33 @@
 
 @section('content')
     <div class="p-4 sm:p-6 bg-gray-800 shadow-lg rounded-lg max-w-4xl mx-auto">
-        <h1 class="text-2xl font-bold text-slate-100 mb-6">Editar Lote <span
-                class="font-mono text-red-500">#{{ $lote->id }}</span></h1>
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-100">Editar Lote <span
+                        class="font-mono text-red-500">#{{ $lote->id }}</span></h1>
+                <p class="text-sm text-slate-400">Cód. Proveedor: {{ $lote->lote_proveedor_codigo }}</p>
+            </div>
+            {{-- Badge para mostrar el estado actual (no editable) --}}
+            <div>
+                <label class="text-xs text-slate-400">Estado Actual</label>
+                @php
+                    $estadoClasses =
+                        [
+                            'En Cuarentena' => 'bg-yellow-500/20 text-yellow-300',
+                            'Rechazado' => 'bg-red-500/20 text-red-300',
+                            'Listo para Producción' => 'bg-green-500/20 text-green-300',
+                            'Agotado' => 'bg-gray-500/20 text-gray-400',
+                        ][$lote->estado] ?? 'bg-gray-500/20 text-gray-400';
+                @endphp
+                <p class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $estadoClasses }}">
+                    {{ $lote->estado }}
+                </p>
+            </div>
+        </div>
 
         <form action="{{ route('lotes.update', $lote->id) }}" method="POST">
             @csrf
-            @method('PUT') {{-- Directiva para indicar que es una petición de actualización --}}
-
+            @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {{-- Remito Asociado --}}
                 <div>
@@ -93,44 +113,34 @@
                 </div>
 
                 {{-- Fecha de Elaboración --}}
-                <div>
-                    <label for="fecha_elaboracion" class="block text-sm font-medium text-slate-300 mb-1">Fecha Elaboración
-                        (Opcional)</label>
-                    <input type="date" id="fecha_elaboracion" name="fecha_elaboracion"
-                        value="{{ old('fecha_elaboracion', $lote->fecha_elaboracion ? $lote->fecha_elaboracion->format('Y-m-d') : '') }}"
-                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
-                    @error('fecha_elaboracion')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                {{-- Fechas (en la misma fila, ocupando todo el ancho) --}}
+                <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Fecha de Elaboración --}}
+                    <div>
+                        <label for="fecha_elaboracion" class="block text-sm font-medium text-slate-300 mb-1">Fecha
+                            Elaboración
+                            (Opcional)</label>
+                        <input type="date" id="fecha_elaboracion" name="fecha_elaboracion"
+                            value="{{ old('fecha_elaboracion', $lote->fecha_elaboracion ? $lote->fecha_elaboracion->format('Y-m-d') : '') }}"
+                            class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
+                        @error('fecha_elaboracion')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Fecha de Vencimiento --}}
+                    <div>
+                        <label for="fecha_vencimiento" class="block text-sm font-medium text-slate-300 mb-1">Fecha
+                            Vencimiento</label>
+                        <input type="date" id="fecha_vencimiento" name="fecha_vencimiento"
+                            value="{{ old('fecha_vencimiento', $lote->fecha_vencimiento->format('Y-m-d')) }}" required
+                            class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
+                        @error('fecha_vencimiento')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
-                {{-- Fecha de Vencimiento --}}
-                <div>
-                    <label for="fecha_vencimiento" class="block text-sm font-medium text-slate-300 mb-1">Fecha
-                        Vencimiento</label>
-                    <input type="date" id="fecha_vencimiento" name="fecha_vencimiento"
-                        value="{{ old('fecha_vencimiento', $lote->fecha_vencimiento->format('Y-m-d')) }}" required
-                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
-                    @error('fecha_vencimiento')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Estado --}}
-                <div>
-                    <label for="estado" class="block text-sm font-medium text-slate-300 mb-1">Estado</label>
-                    <select id="estado" name="estado" required
-                        class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500">
-                        @foreach (['En Cuarentena', 'Rechazado', 'Listo para Producción', 'Agotado'] as $estado)
-                            <option value="{{ $estado }}"
-                                {{ old('estado', $lote->estado) == $estado ? 'selected' : '' }}>{{ $estado }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('estado')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
             </div>
 
             {{-- Observaciones --}}
