@@ -50,4 +50,10 @@ class Lote extends Model
     {
         return $this->belongsTo(Unidad::class);
     }
+
+    // Relación con análisis
+    public function analisis(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Analisis::class)->orderBy('version', 'desc');
+    }
 }

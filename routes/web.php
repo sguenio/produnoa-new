@@ -11,6 +11,7 @@ use App\Http\Controllers\ParametroAnalisisController;
 use App\Http\Controllers\EspecificacionController;
 use App\Http\Controllers\RemitoController;
 use App\Http\Controllers\LoteController;
+use App\Http\Controllers\AnalisisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,17 @@ Route::middleware('auth')->group(function () {
 
     // Remitos (CRUD accesible para todos los logueados)
     Route::resource('remitos', RemitoController::class);
-        Route::resource('lotes', LoteController::class); 
+    Route::resource('lotes', LoteController::class);
+
+    // --- RUTAS PARA EL FLUJO DE ANÁLISIS DE CALIDAD ---
+    Route::get('/control-calidad', [AnalisisController::class, 'index'])->name('analisis.index');
+    Route::get('/lotes/{lote}/analizar', [AnalisisController::class, 'create'])->name('analisis.create');
+    Route::post('/lotes/{lote}/analizar', [AnalisisController::class, 'store'])->name('analisis.store');
+
+    // Análisis decisión
+    Route::get('/analisis/{analisis}/decision', [AnalisisController::class, 'showDecisionForm'])->name('analisis.decision');
+
+
 
 
 
@@ -50,6 +61,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('unidades', UnidadController::class)->parameters(['unidades' => 'unidad']);
         Route::resource('productos', ProductoController::class);
         Route::resource('parametros', ParametroAnalisisController::class)->parameters(['parametros' => 'parametroAnalisis']);
+
+        // Aprobaciones
+        Route::get('/aprobaciones', [AnalisisController::class, 'showAprobaciones'])->name('aprobaciones.index');
+        Route::post('/lotes/{lote}/aprobar', [AnalisisController::class, 'aprobar'])->name('lotes.aprobar');
+        Route::post('/lotes/{lote}/rechazar', [AnalisisController::class, 'rechazar'])->name('lotes.rechazar');
+
+
 
         // --- RUTAS PARA GESTIONAR ESPECIFICACIONES DE UNA CATEGORÍA ---
         Route::prefix('categorias/{categoria}/especificaciones')->name('categorias.especificaciones.')->group(function () {
