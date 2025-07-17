@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mi Aplicación Produnoa')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -17,8 +18,8 @@
 
 <body class="bg-gray-900 text-slate-300 min-h-screen" x-data="{ sidebarOpen: window.innerWidth >= 768 }"
     @resize.window="if (!isMobile()) sidebarOpen = true">
-    <div x-show="sidebarOpen && isMobile()" @click="sidebarOpen = false" class="fixed inset-0 bg-black bg-opacity-50 z-40"
-        x-cloak></div>
+    <div x-show="sidebarOpen && isMobile()" @click="sidebarOpen = false"
+        class="fixed inset-0 bg-black bg-opacity-50 z-40" x-cloak></div>
     <x-sidebar />
     <x-header />
     <main class="transition-all duration-300 ease-in-out px-6 pt-20 pb-8"

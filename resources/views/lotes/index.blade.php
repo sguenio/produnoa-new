@@ -66,6 +66,7 @@
                                     $estadoClasses =
                                         [
                                             'En Cuarentena' => 'bg-yellow-500/20 text-yellow-300',
+                                            'Pendiente de Aprobación' => 'bg-sky-500/20 text-sky-300', 
                                             'Rechazado' => 'bg-red-500/20 text-red-300',
                                             'Listo para Producción' => 'bg-green-500/20 text-green-300',
                                             'Agotado' => 'bg-gray-500/20 text-gray-400',

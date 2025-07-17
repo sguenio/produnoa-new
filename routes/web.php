@@ -45,6 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/control-calidad', [AnalisisController::class, 'index'])->name('analisis.index');
     Route::get('/lotes/{lote}/analizar', [AnalisisController::class, 'create'])->name('analisis.create');
     Route::post('/lotes/{lote}/analizar', [AnalisisController::class, 'store'])->name('analisis.store');
+    Route::post('/lotes/{lote}/reanalizar', [LoteController::class, 'habilitarReanalisis'])->name('lotes.reanalizar');
+
 
     // Análisis decisión
     Route::get('/analisis/{analisis}/decision', [AnalisisController::class, 'showDecisionForm'])->name('analisis.decision');

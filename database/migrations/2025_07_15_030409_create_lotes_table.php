@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('unidad_id')->constrained('unidades');
             $table->date('fecha_elaboracion')->nullable();
             $table->date('fecha_vencimiento');
-            $table->enum('estado', ['En Cuarentena', 'Rechazado', 'Listo para Producción', 'Agotado'])->default('En Cuarentena');
+            $table->enum('estado', ['En Cuarentena', 'Pendiente de Aprobación', 'Rechazado', 'Listo para Producción', 'Agotado'])->default('En Cuarentena');
             $table->text('observaciones')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -14,10 +14,13 @@ class AnalisisController extends Controller
     // Muestra la lista de lotes "En Cuarentena"
     public function index()
     {
+        // CORRECCIÓN: Ahora solo filtramos por el estado. Si está 'En Cuarentena',
+        // necesita ser analizado, sin importar si es la primera vez o un re-análisis.
         $lotesEnCuarentena = Lote::where('estado', 'En Cuarentena')
             ->with(['producto.categoria', 'remito.proveedor'])
             ->orderBy('created_at', 'asc')
             ->get();
+
         return view('analisis.index', compact('lotesEnCuarentena'));
     }
 
@@ -91,18 +94,21 @@ class AnalisisController extends Controller
 
             // 3. Finalmente, guardamos los resultados individuales
             $analisis->resultados()->createMany($resultadosAGuardar);
+
+            // Actualizamos el estado del lote para que pase a la cola del administrador.
+            $lote->estado = 'Pendiente de Aprobación';
+            $lote->save();
         });
 
         return redirect()->route('analisis.index')->with('success', 'Análisis del lote #' . $lote->id . ' guardado exitosamente.');
     }
 
+    // app/Http/Controllers/AnalisisController.php -> showAprobaciones()
     public function showAprobaciones()
     {
-        // Buscamos lotes que están 'En Cuarentena' PERO que ya tienen al menos un análisis.
-        $lotesPendientes = Lote::where('estado', 'En Cuarentena')
-            ->has('analisis')
+        // La consulta ahora busca lotes con el estado 'Pendiente de Aprobación'
+        $lotesPendientes = Lote::where('estado', 'Pendiente de Aprobación')
             ->with(['producto.categoria', 'remito.proveedor', 'analisis' => function ($query) {
-                // Cargamos solo el último análisis de cada lote para mostrar el resultado más reciente
                 $query->latest('version');
             }])
             ->get();

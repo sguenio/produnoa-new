@@ -91,4 +91,15 @@ class LoteController extends Controller
 
         return redirect()->route('lotes.index')->with('error', 'Esta acción no se puede realizar sobre este lote.');
     }
+
+    // app/Http/Controllers/LoteController.php -> habilitarReanalisis()
+    public function habilitarReanalisis(Lote $lote)
+    {
+        // Cambiamos el estado del lote de vuelta a "En Cuarentena".
+        $lote->estado = 'En Cuarentena';
+        $lote->save();
+
+        // Redirigimos al usuario a la página anterior con un mensaje de éxito.
+        return back()->with('success', 'Re-análisis habilitado. El lote #' . $lote->id . ' ha vuelto a la cola de Control de Calidad.');
+    }
 }

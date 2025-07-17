@@ -72,31 +72,42 @@ $(function () {
         // Configuración para la tabla de Historial de Análisis (agrupación por lote)
         else if (tableId === "historialAnalisisTable") {
             options.rowGroup = {
-                dataSrc: 2, // Agrupa por la columna 3 (índice 2), que es "Lote ID"
+                dataSrc: 2,
                 startRender: function (rows, group) {
                     var rowData = rows.data()[0];
-                    var analisisId = rowData[0]; // ID del primer análisis del grupo
-                    var productName = rowData[3]; // Nombre del producto
+                    var analisisId = rowData[0];
+                    var loteId = rowData[2]; // Obtenemos el ID del lote
+                    var productName = rowData[3];
 
-                    // Construimos la URL manualmente para evitar errores de Blade en JS
-                    var url = `/analisis/${analisisId}`;
+                    // Creamos las URLs manualmente
+                    var urlTimeline = `/analisis/${analisisId}`;
+                    var urlReanalisis = `/lotes/${loteId}/reanalizar`; // Ruta para la acción de re-análisis
 
                     var title = `Lote: ${group} (${productName})`;
-                    var button = `<a href="${url}" class="ml-auto bg-sky-600/50 hover:bg-sky-700/50 text-sky-300 font-bold py-1 px-3 rounded-lg inline-flex items-center text-xs">Ver Timeline</a>`;
 
-                    // La suma de colspan es 6 (4 + 2), que coincide con las columnas visibles.
-                    return $('<tr class="dtrg-group"></tr>')
+                    // Creamos ambos botones
+                    var timelineButton = `<a href="${urlTimeline}" class="bg-sky-600/50 hover:bg-sky-700/50 text-sky-300 font-bold py-1 px-3 rounded-lg text-xs">Ver Timeline</a>`;
+                    var reanalisisButton = `
+                <form action="${urlReanalisis}" method="POST" class="inline-block" onsubmit="return confirm('¿Seguro que quieres habilitar un nuevo análisis para este lote?');">
+                    <input type="hidden" name="_token" value="${$(
+                        'meta[name="csrf-token"]'
+                    ).attr("content")}">
+                    <button type="submit" class="bg-amber-600/50 hover:bg-amber-700/50 text-amber-300 font-bold py-1 px-3 rounded-lg text-xs">Re-Analizar</button>
+                </form>
+            `;
+
+                    // Los ponemos en la celda de la derecha
+                    return $(`<tr class="dtrg-group"></tr>`)
                         .append(
-                            `<td colspan="4" class="px-6 py-4 font-bold text-slate-200">${title}</td>`
+                            `<td colspan="3" class="p-2 font-bold text-slate-200">${title}</td>`
                         )
                         .append(
-                            `<td colspan="2" class="px-4 py-4 text-right">${button}</td>`
+                            `<td colspan="3" class="p-2 text-right space-x-2">${timelineButton}${reanalisisButton}</td>`
                         );
                 },
             };
             options.order = [[2, "desc"]];
-            options.columnDefs.push({ targets: 2, visible: false });
-            // Oculta Lote ID y la columna Acciones
+            options.columnDefs.push({ targets: [2], visible: false });
         }
 
         // Finalmente, inicializamos la tabla con sus opciones finales
