@@ -12,7 +12,7 @@ use App\Http\Controllers\EspecificacionController;
 use App\Http\Controllers\RemitoController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\AnalisisController;
-
+use App\Http\Controllers\DisposicionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,9 +86,12 @@ Route::middleware('auth')->group(function () {
         // Historial de análisis
         Route::get('/historial/analisis', [AnalisisController::class, 'showHistory'])->name('analisis.historial');
 
+        // --- RUTAS PARA GESTIONAR DISPOSICIONES ---
+        Route::get('/disposiciones', [DisposicionController::class, 'index'])->name('disposiciones.index');
+        Route::get('/lotes/{lote}/disposicion/create', [DisposicionController::class, 'create'])->name('disposiciones.create');
+        Route::post('/lotes/{lote}/disposicion', [DisposicionController::class, 'store'])->name('disposiciones.store');
+        Route::get('/historial/disposiciones', [DisposicionController::class, 'showHistory'])->name('disposiciones.historial'); // <-- AÑADE ESTA LÍNEA
 
 
-
-        // Aquí añadiremos el resto de los CRUDs de admin
     });
 });

@@ -56,4 +56,9 @@ class Lote extends Model
     {
         return $this->hasMany(Analisis::class)->orderBy('version', 'desc');
     }
+
+    public function disposicion(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Disposicion::class);
+    }
 }
