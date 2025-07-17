@@ -84,26 +84,24 @@ $(function () {
                     var urlReanalisis = `/lotes/${loteId}/reanalizar`; // Ruta para la acción de re-análisis
 
                     var title = `Lote: ${group} (${productName})`;
-
-                    // Creamos ambos botones
-                    var timelineButton = `<a href="${urlTimeline}" class="bg-sky-600/50 hover:bg-sky-700/50 text-sky-300 font-bold py-1 px-3 rounded-lg text-xs">Ver Timeline</a>`;
+                    var timelineButton = `<a href="${urlTimeline}" class="ml-auto bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center text-xs transition-colors">Ver Timeline</a>`;
                     var reanalisisButton = `
-                <form action="${urlReanalisis}" method="POST" class="inline-block" onsubmit="return confirm('¿Seguro que quieres habilitar un nuevo análisis para este lote?');">
-                    <input type="hidden" name="_token" value="${$(
-                        'meta[name="csrf-token"]'
-                    ).attr("content")}">
-                    <button type="submit" class="bg-amber-600/50 hover:bg-amber-700/50 text-amber-300 font-bold py-1 px-3 rounded-lg text-xs">Re-Analizar</button>
-                </form>
-            `;
+                        <form action="${urlReanalisis}" method="POST" class="inline-block" onsubmit="return confirm('¿Seguro que quieres habilitar un nuevo análisis para este lote?');">
+                            <input type="hidden" name="_token" value="${$(
+                                'meta[name="csrf-token"]'
+                            ).attr("content")}">
+                            <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-4 rounded-lg text-xs transition-colors">Re-Analizar</button>
+                        </form>
+                    `;
 
-                    // Los ponemos en la celda de la derecha
-                    return $(`<tr class="dtrg-group"></tr>`)
+                    return $('<tr class="dtrg-group"></tr>')
                         .append(
-                            `<td colspan="3" class="p-2 font-bold text-slate-200">${title}</td>`
+                            `<td colspan="4" class="p-4 text-base font-bold text-slate-100">${title}</td>`
                         )
                         .append(
-                            `<td colspan="3" class="p-2 text-right space-x-2">${timelineButton}${reanalisisButton}</td>`
+                            `<td colspan="2" class="p-4 text-right space-x-2">${timelineButton}${reanalisisButton}</td>`
                         );
+                    // --- FIN DE CAMBIOS DE ESTILO ---
                 },
             };
             options.order = [[2, "desc"]];
