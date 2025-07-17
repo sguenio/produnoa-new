@@ -83,3 +83,7 @@ table.dataTable tr.dtrg-group:hover {
     border-color: #374151 !important;
     color: #6b7280 !important;
 }
+
+table.dataTable tr.dtrg-group td {
+    width: 100%;
+}

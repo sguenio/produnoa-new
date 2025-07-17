@@ -13,6 +13,7 @@ use App\Http\Controllers\RemitoController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\AnalisisController;
 use App\Http\Controllers\DisposicionController;
+use App\Http\Controllers\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,7 +31,8 @@ Route::post('/logout', [AuthController::class, 'cerrarSesion'])->name('logout');
 Route::middleware('auth')->group(function () {
 
     // Dashboard (accesible para todos los logueados)
-    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
+
 
     // Categorías (la lista es visible para todos, la gestión es solo para admins)
     Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
