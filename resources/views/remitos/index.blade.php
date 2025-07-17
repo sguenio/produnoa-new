@@ -194,11 +194,24 @@
                         </template>
                     </div>
                 </div>
-                <div class="text-right p-4 bg-gray-100 rounded-b-lg no-print">
-                    <button @click="showModal = false"
-                        class="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200">Cancelar</button>
-                    <button @click="window.print()"
-                        class="py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 ml-2">Imprimir</button>
+                <div class="flex justify-between items-center p-4 bg-gray-100 rounded-b-lg no-print">
+                    {{-- Botón de Añadir Lote a la izquierda --}}
+                    <a x-bind:href="`/remitos/${selectedRemito?.id}/lotes/create`"
+                        class="py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                        + Añadir Lote a este Remito
+                    </a>
+
+                    {{-- Grupo de botones a la derecha --}}
+                    <div class="flex items-center gap-2">
+                        <button @click="showModal = false"
+                            class="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200">
+                            Cancelar
+                        </button>
+                        <button @click="window.print()"
+                            class="py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700">
+                            Imprimir
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

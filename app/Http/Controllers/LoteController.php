@@ -20,13 +20,28 @@ class LoteController extends Controller
         return view('lotes.index', compact('lotes'));
     }
 
+    public function createFromRemito(Remito $remito)
+    {
+        // Pasamos el remito específico y las listas de productos y unidades
+        $productos = Producto::orderBy('nombre')->get();
+        $unidades = Unidad::orderBy('nombre')->get();
+
+        // Reutilizamos la misma vista 'create', pero le pasamos el remito
+        return view('lotes.create', compact('remito', 'productos', 'unidades'));
+    }
+
     public function create()
     {
         // Pasamos todos los datos necesarios para los <select> del formulario
         $remitos = Remito::orderBy('fecha_recepcion', 'desc')->get();
         $productos = Producto::orderBy('nombre')->get();
         $unidades = Unidad::orderBy('nombre')->get();
-        return view('lotes.create', compact('remitos', 'productos', 'unidades'));
+        return view('lotes.create', [
+            'remitos' => $remitos,
+            'productos' => $productos,
+            'unidades' => $unidades,
+            'remito' => null,
+        ]);
     }
 
     public function store(Request $request)

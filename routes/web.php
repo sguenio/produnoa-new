@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 
     // Remitos (CRUD accesible para todos los logueados)
+    Route::get('/remitos/{remito}/lotes/create', [LoteController::class, 'createFromRemito'])->name('lotes.createFromRemito');
     Route::resource('remitos', RemitoController::class);
     Route::resource('lotes', LoteController::class);
     Route::post('/lotes/{lote}/agotar', [LoteController::class, 'marcarAgotado'])->name('lotes.agotar');

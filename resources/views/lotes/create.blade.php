@@ -20,14 +20,23 @@
                 {{-- Remito Asociado --}}
                 <div>
                     <label for="remito_id" class="block text-sm font-medium text-slate-300 mb-1">Remito Asociado</label>
-                    <select id="remito_id" name="remito_id" required class="w-full select2-enable">
-                        <option></option> {{-- Opción vacía para el placeholder de Select2 --}}
-                        @foreach ($remitos as $remito)
-                            <option value="{{ $remito->id }}" {{ old('remito_id') == $remito->id ? 'selected' : '' }}>
-                                N° {{ $remito->codigo_remito }} ({{ $remito->proveedor->nombre }})
-                            </option>
-                        @endforeach
-                    </select>
+                    {{-- Si venimos desde un remito específico, el campo está pre-seleccionado y bloqueado --}}
+                    @if ($remito)
+                        <input type="hidden" name="remito_id" value="{{ $remito->id }}">
+                        <input type="text" value="{{ $remito->codigo_remito }} ({{ $remito->proveedor->nombre }})"
+                            disabled class="w-full px-3 py-2 bg-gray-900/50 border border-gray-700 rounded-md">
+                    @else
+                        {{-- Si no, mostramos el selector de búsqueda como antes --}}
+                        <select id="remito_id" name="remito_id" required class="w-full select2-enable">
+                            <option></option>
+                            @foreach ($remitos as $remitoItem)
+                                <option value="{{ $remitoItem->id }}"
+                                    {{ old('remito_id') == $remitoItem->id ? 'selected' : '' }}>
+                                    N° {{ $remitoItem->codigo_remito }} ({{ $remitoItem->proveedor->nombre }})
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
                     @error('remito_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -39,7 +48,8 @@
                     <select id="producto_id" name="producto_id" required class="w-full select2-enable">
                         <option></option>
                         @foreach ($productos as $producto)
-                            <option value="{{ $producto->id }}" {{ old('producto_id') == $producto->id ? 'selected' : '' }}>
+                            <option value="{{ $producto->id }}"
+                                {{ old('producto_id') == $producto->id ? 'selected' : '' }}>
                                 {{ $producto->nombre }} (Cód: {{ $producto->codigo_interno }})
                             </option>
                         @endforeach
