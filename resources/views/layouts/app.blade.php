@@ -6,8 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mi Aplicación Produnoa')</title>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="//unpkg.com/alpinejs" defer></script>
+
     @stack('styles')
     <style>
         [x-cloak] {
@@ -16,14 +18,27 @@
     </style>
 </head>
 
-<body class="bg-gray-900 text-slate-300 min-h-screen" x-data="{ sidebarOpen: window.innerWidth >= 768 }"
+<body class="bg-gray-900 text-slate-300 min-h-screen" x-data="{
+    sidebarOpen: window.innerWidth >= 768,
+    isMobile() { return window.innerWidth < 768; }
+}"
     @resize.window="if (!isMobile()) sidebarOpen = true">
+
+    {{-- Capa de superposición (Overlay) para el sidebar en móvil --}}
+    {{-- CORRECCIÓN: Añadimos x-transition y usamos una clase de opacidad más directa (bg-black/75) --}}
     <div x-show="sidebarOpen && isMobile()" @click="sidebarOpen = false"
-        class="fixed inset-0 bg-black bg-opacity-50 z-40" x-cloak></div>
+        x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/75 z-40"
+        x-cloak></div>
+
     <x-sidebar />
     <x-header />
+
     <main class="transition-all duration-300 ease-in-out px-6 pt-20 pb-8"
         :class="{ 'md:ml-64': sidebarOpen, 'ml-0': !sidebarOpen }">
+
+        {{-- Mensajes de Alerta --}}
         @if (session('success'))
             <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
                 class="bg-green-500/20 border border-green-500 text-green-300 px-4 py-3 rounded-lg relative mb-4"
@@ -52,8 +67,10 @@
                     </svg></button>
             </div>
         @endif
+
         @yield('content')
     </main>
+
     @stack('scripts')
 </body>
 

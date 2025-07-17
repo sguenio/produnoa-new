@@ -24,10 +24,10 @@
     <nav class="flex-grow px-2 pt-2 pb-4 overflow-y-auto space-y-4">
 
         {{-- Sección General --}}
-        <div>
+        <div class="space-y-1">
             <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">General</p>
             <a href="{{ route('dashboard') }}"
-                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('dashboard') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('dashboard') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                 <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('dashboard') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -41,10 +41,10 @@
         </div>
 
         {{-- Sección de Operaciones (Visible para ambos roles) --}}
-        <div>
+        <div class="space-y-1">
             <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Operaciones</p>
             <a href="{{ route('remitos.index') }}"
-                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('remitos.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('remitos.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                 <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('remitos.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -58,7 +58,7 @@
                 Remitos
             </a>
             <a href="{{ route('lotes.index') }}"
-                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('lotes.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('lotes.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                 <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('lotes.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -81,8 +81,8 @@
                 Lotes
             </a>
             <a href="{{ route('analisis.index') }}"
-                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs(['analisis.index', 'analisis.create', 'analisis.decision', 'analisis.show']) ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
-                <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs(['analisis.index', 'analisis.create', 'analisis.decision', 'analisis.show']) ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs(['analisis.index', 'analisis.create']) ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs(['analisis.index', 'analisis.create']) ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path
@@ -94,12 +94,12 @@
             </a>
         </div>
 
-        {{-- Sección de Configuración (Solo para Admins) --}}
+        {{-- Sección de Administración (Solo para Admins) --}}
         @if (Auth::check() && Auth::user()->rol === 'Administrador')
-            <div>
+            <div class="space-y-1">
                 <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Configuración</p>
                 <a href="{{ route('usuarios.index') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('usuarios.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('usuarios.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                     <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('usuarios.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -111,7 +111,7 @@
                     Usuarios
                 </a>
                 <a href="{{ route('proveedores.index') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('proveedores.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('proveedores.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                     <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('proveedores.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -124,7 +124,7 @@
                     Proveedores
                 </a>
                 <a href="{{ route('categorias.index') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('categorias.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('categorias.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                     <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('categorias.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -138,7 +138,7 @@
                     Categorías
                 </a>
                 <a href="{{ route('unidades.index') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('unidades.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('unidades.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                     <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('unidades.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -152,7 +152,7 @@
                     Unidades
                 </a>
                 <a href="{{ route('parametros.index') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('parametros.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('parametros.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                     <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('parametros.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -164,23 +164,22 @@
                     Parámetros
                 </a>
             </div>
-            <div>
-                <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Decisiones</p>
+            <div class="space-y-1">
+                <p class="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Auditoría</p>
                 <a href="{{ route('aprobaciones.index') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs('aprobaciones.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
-                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('aprobaciones.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs(['aprobaciones.index', 'analisis.decision']) ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs(['aprobaciones.index', 'analisis.decision']) ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    Aprobaciones Pendientes
+                    Aprobaciones
                 </a>
-
                 <a href="{{ route('disposiciones.index') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md ... {{ request()->routeIs('disposiciones.*') ? '...' : '...' }}">
-                    <svg class="mr-3 h-5 w-5 shrink-0 ..." xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('disposiciones.*') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('disposiciones.*') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path
                             d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14" />
                         <path d="m7.5 4.27 9 5.15" />
@@ -190,10 +189,20 @@
                     </svg>
                     Disposiciones
                 </a>
-
+                <a href="{{ route('analisis.historial') }}"
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs(['analisis.historial', 'analisis.show']) ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs(['analisis.historial', 'analisis.show']) ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                        <path d="M12 7v5l4 2" />
+                    </svg>
+                    Historial de Análisis
+                </a>
+                {{-- ITEM FALTANTE AÑADIDO AQUÍ --}}
                 <a href="{{ route('disposiciones.historial') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 
-              {{ request()->routeIs('disposiciones.historial') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('disposiciones.historial') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
                     <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('disposiciones.historial') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -204,19 +213,6 @@
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
                     Historial de Disposiciones
-                </a>
-
-                <a href="{{ route('analisis.historial') }}"
-                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors duration-150 
-             {{ request()->routeIs('analisis.historial') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
-                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('analisis.historial') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                        <path d="M3 3v5h5" />
-                        <path d="M12 7v5l4 2" />
-                    </svg>
-                    Historial de Análisis
                 </a>
             </div>
         @endif
