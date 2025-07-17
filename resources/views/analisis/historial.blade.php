@@ -12,7 +12,7 @@
     <h1 class="text-3xl font-bold text-slate-100 mb-6">Historial de Todos los Análisis</h1>
 
     <div class="overflow-x-auto bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6">
-        <table class="datatable w-full text-sm" id="historialAnalisisTable">
+        <table id="historialAnalisisTable" class="datatable w-full text-sm">
             <thead>
                 <tr>
                     <th>ID Análisis</th>
@@ -22,6 +22,7 @@
                     <th>Analista</th>
                     <th>Versión</th>
                     <th>Resultado</th>
+                    <th class="no-sort"></th> {{-- Columna vacía para que DataTables no dé error con el colspan --}}
                 </tr>
             </thead>
             <tbody>
@@ -29,7 +30,7 @@
                     <tr>
                         <td class="font-mono">{{ $analisis->id }}</td>
                         <td>{{ $analisis->fecha_analisis->format('d/m/Y H:i') }}</td>
-                        <td class="font-mono">{{ $analisis->lote->id }}</td>
+                        <td>{{ $analisis->lote->id }}</td>
                         <td>{{ $analisis->lote->producto->nombre }}</td>
                         <td>{{ $analisis->usuario->nombre }}</td>
                         <td><span class="font-semibold">v{{ $analisis->version }}</span></td>
@@ -45,6 +46,7 @@
                                 {{ $analisis->resultado_general }}
                             </span>
                         </td>
+                        <td></td> {{-- Celda vacía correspondiente a la cabecera de Acciones --}}
                     </tr>
                 @endforeach
             </tbody>

@@ -1,24 +1,16 @@
-// -----------------------------------------------------------------------------
-// IMPORTACIONES DE LIBRERÍAS
-// -----------------------------------------------------------------------------
-// Importamos las librerías desde nuestra carpeta local 'vendor' en el orden correcto.
-// Esta sintaxis simplemente ejecuta cada script, haciendo que jQuery ($) y
-// DataTable estén disponibles globalmente para los scripts que los necesiten.
+// resources/js/app.js
 
+// 1. IMPORTACIONES DE LIBRERÍAS
 import "./vendor/jquery.js";
 import "./vendor/select2.min.js";
 import "./vendor/dataTables.js";
 import "./vendor/dataTables.tailwindcss.js";
 import "./vendor/dataTables.rowGroup.min.js";
+import "./vendor/dataTables.responsive.min.js";
 
-// -----------------------------------------------------------------------------
-// INICIALIZADOR PRINCIPAL
-// -----------------------------------------------------------------------------
-// Usamos jQuery para esperar a que el documento esté completamente cargado.
+// 2. INICIALIZADOR PRINCIPAL
 $(function () {
-    // --- 1. Lógica Global (se ejecuta en todas las páginas) ---
-
-    // Inicializador para cualquier <select> con la clase .select2-enable
+    // Inicializador global para Select2
     if ($(".select2-enable").length) {
         $(".select2-enable").select2({
             placeholder: "Seleccione una opción",
@@ -26,9 +18,7 @@ $(function () {
         });
     }
 
-    // --- 2. Lógica Específica para DataTables ---
-
-    // Opciones por defecto que compartirán todas nuestras DataTables
+    // Opciones por defecto para TODAS las DataTables
     const defaultDtOptions = {
         layout: {
             topStart: "pageLength",
@@ -37,83 +27,109 @@ $(function () {
         language: {
             url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/es-ES.json",
         },
-        responsive: true,
+        responsive: {
+            details: {
+                type: "column",
+                target: "tr",
+                renderer: function (api, rowIdx, columns) {
+                    var data = $.map(columns, function (col, i) {
+                        return col.hidden
+                            ? '<li class="flex items-center gap-2 p-2" data-dt-row="' +
+                                  col.rowIndex +
+                                  '" data-dt-column="' +
+                                  col.columnIndex +
+                                  '">' +
+                                  '<span class="font-bold">' +
+                                  col.title +
+                                  ":" +
+                                  "</span> " +
+                                  "<span>" +
+                                  col.data +
+                                  "</span>" +
+                                  "</li>"
+                            : "";
+                    }).join("");
+
+                    return data
+                        ? $(
+                              '<ul class="space-y-2 p-3 bg-gray-900/50"/>'
+                          ).append(data)
+                        : false;
+                },
+            },
+        },
         columnDefs: [
             {
-                targets: "no-sort", // Desactiva el ordenamiento en columnas con esta clase
+                targets: "no-sort",
                 orderable: false,
+                className: "dt-center",
             },
         ],
     };
 
-    // Buscamos todas las tablas con la clase ".datatable" y las inicializamos una por una
+    // Inicializador para CUALQUIER tabla con la clase .datatable
     $("table.datatable").each(function () {
-        let options = { ...defaultDtOptions }; // Empezamos con una copia de las opciones por defecto
+        let options = { ...defaultDtOptions };
         const tableId = $(this).attr("id");
 
-        // --- AÑADIMOS CONFIGURACIONES ESPECIALES BASADAS EN EL ID DE LA TABLA ---
+        // --- LÓGICA ESPECIALIZADA POR TABLA ---
 
-        // Configuración para la tabla de Lotes (agrupación por remito)
+        // CORRECCIÓN: Estilo mejorado para la fila de agrupación de Lotes
         if (tableId === "lotesDataTable") {
             options.rowGroup = {
-                dataSrc: 3, // Agrupa por la columna 4 (índice 3), que es "Remito Asociado"
-                startRender: function (rows, group) {
-                    return $("<tr/>").append(
-                        '<td colspan="7" class="p-2 font-bold text-slate-200 bg-gray-900/50">Remito: ' +
-                            group +
-                            "</td>"
+                dataSrc: 3,
+                startRender: (rows, group) => {
+                    const title = `<p class="text-base font-bold text-slate-100">Remito: ${group}</p>`;
+                    return $(
+                        `<tr class="dtrg-group"><td colspan="7" class="p-3">${title}</td></tr>`
                     );
                 },
             };
-            options.order = [[3, "desc"]]; // Ordena por defecto por la columna de agrupación
-            options.columnDefs.push({ targets: 3, visible: false }); // Oculta la columna original
-        }
-
-        // Configuración para la tabla de Historial de Análisis (agrupación por lote)
-        else if (tableId === "historialAnalisisTable") {
+            options.order = [[3, "desc"]];
+            options.columnDefs.push({ targets: 3, visible: false });
+        } else if (tableId === "historialAnalisisTable") {
             options.rowGroup = {
                 dataSrc: 2,
                 startRender: function (rows, group) {
                     var rowData = rows.data()[0];
                     var analisisId = rowData[0];
-                    var loteId = rowData[2]; // Obtenemos el ID del lote
+                    var loteId = rowData[2];
                     var productName = rowData[3];
-
-                    // Creamos las URLs manualmente
                     var urlTimeline = `/analisis/${analisisId}`;
-                    var urlReanalisis = `/lotes/${loteId}/reanalizar`; // Ruta para la acción de re-análisis
+                    var urlReanalisis = `/lotes/${loteId}/reanalizar`;
 
-                    var title = `Lote: ${group} (${productName})`;
-                    var timelineButton = `<a href="${urlTimeline}" class="ml-auto bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center text-xs transition-colors">Ver Timeline</a>`;
-                    var reanalisisButton = `
-                        <form action="${urlReanalisis}" method="POST" class="inline-block" onsubmit="return confirm('¿Seguro que quieres habilitar un nuevo análisis para este lote?');">
-                            <input type="hidden" name="_token" value="${$(
-                                'meta[name="csrf-token"]'
-                            ).attr("content")}">
-                            <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-4 rounded-lg text-xs transition-colors">Re-Analizar</button>
-                        </form>
-                    `;
+                    var title = `<p class="text-base font-bold text-slate-100">Lote: ${group} (${productName})</p>`;
 
-                    return $('<tr class="dtrg-group"></tr>')
-                        .append(
-                            `<td colspan="4" class="p-4 text-base font-bold text-slate-100">${title}</td>`
-                        )
-                        .append(
-                            `<td colspan="2" class="p-4 text-right space-x-2">${timelineButton}${reanalisisButton}</td>`
-                        );
-                    // --- FIN DE CAMBIOS DE ESTILO ---
+                    var buttons = `
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 shrink-0">
+                            <a href="${urlTimeline}" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-3 rounded-lg inline-flex items-center justify-center text-xs transition-colors">Ver Timeline</a>
+                            <form action="${urlReanalisis}" method="POST" class="w-full sm:w-auto" onsubmit="return confirm('¿Habilitar un nuevo análisis para este lote?');">
+                                <input type="hidden" name="_token" value="${$(
+                                    'meta[name="csrf-token"]'
+                                ).attr("content")}">
+                                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-3 rounded-lg text-xs transition-colors">Re-Analizar</button>
+                            </form>
+                        </div>`;
+
+                    var responsiveWrapper = `<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">${title}${buttons}</div>`;
+
+                    return $('<tr class="dtrg-group"></tr>').append(
+                        `<td colspan="6" class="p-3">${responsiveWrapper}</td>`
+                    );
                 },
             };
             options.order = [[2, "desc"]];
-            options.columnDefs.push({ targets: [2], visible: false });
+            options.columnDefs.push({ targets: [2, 7], visible: false });
+        } else if (tableId === "analisisIndexTable") {
+            options.columnDefs.push({ responsivePriority: 1, targets: 0 });
+            options.columnDefs.push({ responsivePriority: 2, targets: -1 });
+        } else if (tableId === "disposicionesHistorialTable") {
+            options.columnDefs.push({ responsivePriority: 1, targets: 2 });
+            options.columnDefs.push({ responsivePriority: 2, targets: 3 });
         }
 
-        // Finalmente, inicializamos la tabla con sus opciones finales
         const dataTableInstance = new DataTable(this, options);
 
-        // --- AÑADIMOS EVENTOS ESPECIALES DESPUÉS DE LA INICIALIZACIÓN ---
-
-        // Lógica de los botones de filtro solo para la tabla de Productos
         if (tableId === "productsDataTable") {
             $(".category-filter-btn").on("click", function () {
                 const categoryFilter = $(this).data("category") || "";
