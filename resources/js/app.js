@@ -186,6 +186,7 @@ $(function () {
 
         // LÓGICA PARA ACTIVAR EL FILTRO DE FECHAS EN LA TABLA DE ACTIVIDADES
         if (tableId === "actividadesTable") {
+            options.order = [[0, "desc"]];
             $("#min, #max").on("change", function () {
                 dataTableInstance.draw();
             });

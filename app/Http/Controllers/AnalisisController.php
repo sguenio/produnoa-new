@@ -55,15 +55,16 @@ class AnalisisController extends Controller
             $resultadosAGuardar = [];
 
             foreach ($request->resultados as $parametro_id => $valor_resultado) {
-                // CORRECCIÓN: Definimos $aprueba aquí para que siempre exista
+                $especificacion = $especificaciones[$parametro_id] ?? null;
                 $aprueba = true;
 
-                $especificacion = $especificaciones[$parametro_id] ?? null;
-
                 if ($especificacion) {
+                    // --- INICIO DE LA CORRECCIÓN ---
                     if (isset($especificacion->valor_texto)) {
-                        $aprueba = (strtolower($valor_resultado) == strtolower($especificacion->valor_texto));
+                        // Para pruebas cualitativas, solo pasa si el resultado es "Cumple".
+                        $aprueba = ($valor_resultado === 'Cumple');
                     } else {
+                        // La validación numérica sigue igual.
                         $valor_resultado_num = floatval($valor_resultado);
                         if ((isset($especificacion->valor_minimo) && $valor_resultado_num < $especificacion->valor_minimo) ||
                             (isset($especificacion->valor_maximo) && $valor_resultado_num > $especificacion->valor_maximo)
@@ -71,6 +72,7 @@ class AnalisisController extends Controller
                             $aprueba = false;
                         }
                     }
+                    // --- FIN DE LA CORRECCIÓN ---
                 }
 
                 if (!$aprueba) {
@@ -89,7 +91,7 @@ class AnalisisController extends Controller
             }
 
             $analisis = $lote->analisis()->create([
-                'usuario_id' => Auth::id(),
+                'usuario_id' => \Auth::id(),
                 'version' => ($lote->analisis()->max('version') ?? 0) + 1,
                 'resultado_general' => $resultadoGeneral,
                 'fecha_analisis' => now(),
@@ -97,13 +99,12 @@ class AnalisisController extends Controller
             ]);
 
             $analisis->resultados()->createMany($resultadosAGuardar);
-
             $lote->estado = 'Pendiente de Aprobación';
             $lote->save();
         });
 
-        Actividad::create([
-            'usuario_id' => Auth::id(),
+        \App\Models\Actividad::create([
+            'usuario_id' => \Auth::id(),
             'tipo_accion' => 'ANÁLISIS',
             'descripcion' => "Registró el análisis v{$lote->analisis()->latest()->first()->version} para el lote #{$lote->id} ({$lote->producto->nombre}) con resultado: {$resultadoGeneral}.",
             'ip_address' => $request->ip(),

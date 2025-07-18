@@ -58,16 +58,28 @@
         </div>
 
         @if ($especificaciones->isEmpty())
-            {{-- Mensaje de advertencia si no hay especificaciones (sin cambios) --}}
+            <div class="text-center py-8">
+                <p class="text-amber-400"><strong>Advertencia:</strong> No se han definido especificaciones de análisis para
+                    la categoría '{{ $lote->producto->categoria->nombre }}'.</p>
+                <p class="text-slate-400 mt-2 text-sm">Por favor, pida a un administrador que configure la plantilla de
+                    análisis para esta categoría.</p>
+                <a href="{{ route('categorias.index') }}"
+                    class="mt-4 inline-block py-2 px-4 border border-gray-600 rounded-md text-sm font-medium text-slate-200 hover:bg-gray-700">Ir
+                    a Categorías</a>
+            </div>
         @else
             <form x-ref="analysisForm" action="{{ route('analisis.store', $lote->id) }}" method="POST"
                 @submit.prevent="
                 capturedResults = [];
-                // Recorremos cada input de resultado para capturar su valor
                 $refs.analysisForm.querySelectorAll('.analysis-input').forEach(input => {
+                    let value = input.value;
+                    // Para los select, obtenemos el texto de la opción seleccionada
+                    if (input.tagName.toLowerCase() === 'select') {
+                        value = input.options[input.selectedIndex].text;
+                    }
                     capturedResults.push({
                         name: input.dataset.paramName,
-                        value: input.value,
+                        value: value,
                         unit: input.dataset.paramUnit || ''
                     });
                 });
@@ -75,33 +87,46 @@
               ">
                 @csrf
                 <div class="space-y-6">
+                    {{-- Bucle para generar el formulario dinámico --}}
                     @foreach ($especificaciones as $spec)
-                        <div>
-                            <label for="param-{{ $spec->parametro_id }}"
-                                class="block text-sm font-medium text-slate-300 mb-1">
+                        <div class="bg-gray-900/50 p-4 rounded-lg">
+                            <label class="block text-sm font-medium text-slate-300 mb-2">
                                 {{ $spec->parametro->nombre }}
                                 @if ($spec->parametro->unidad)
                                     <span
                                         class="text-xs text-slate-500">({{ $spec->parametro->unidad->abreviatura }})</span>
                                 @endif
                             </label>
-                            <input type="text" id="param-{{ $spec->parametro_id }}"
-                                name="resultados[{{ $spec->parametro_id }}]"
-                                value="{{ old('resultados.' . $spec->parametro_id) }}" required
-                                class="analysis-input w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500"
-                                placeholder="{{ $spec->valor_texto ?? 'Ingrese valor...' }}"
-                                data-param-name="{{ $spec->parametro->nombre }}"
-                                data-param-unit="{{ $spec->parametro->unidad->abreviatura ?? '' }}">
-                            <p class="text-xs text-slate-500 mt-1">
-                                Especificación:
-                                @if ($spec->valor_texto)
-                                    {{ $spec->valor_texto }}
-                                @else
-                                    Min: {{ $spec->valor_minimo ?? 'N/A' }} / Max: {{ $spec->valor_maximo ?? 'N/A' }}
-                                @endif
-                            </p>
+
+                            {{-- SI ES UNA PRUEBA DE TEXTO (CUALITATIVA) --}}
+                            @if ($spec->valor_texto)
+                                <div class="flex items-center gap-4">
+                                    <p class="text-sm text-slate-500 flex-grow">Especificación: <span
+                                            class="font-semibold text-slate-300 italic">"{{ $spec->valor_texto }}"</span>
+                                    </p>
+                                    <select name="resultados[{{ $spec->parametro_id }}]" required
+                                        class="analysis-input w-48 px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                                        data-param-name="{{ $spec->parametro->nombre }}">
+                                        <option value="Cumple">Cumple</option>
+                                        <option value="No Cumple">No Cumple</option>
+                                    </select>
+                                </div>
+                                {{-- SI ES UNA PRUEBA NUMÉRICA --}}
+                            @else
+                                <input type="text" name="resultados[{{ $spec->parametro_id }}]"
+                                    value="{{ old('resultados.' . $spec->parametro_id) }}" required
+                                    class="analysis-input w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                                    placeholder="Ingrese valor numérico..."
+                                    data-param-name="{{ $spec->parametro->nombre }}"
+                                    data-param-unit="{{ $spec->parametro->unidad->abreviatura ?? '' }}">
+                                <p class="text-xs text-slate-500 mt-1">
+                                    Especificación: Min: {{ $spec->valor_minimo ?? 'N/A' }} / Max:
+                                    {{ $spec->valor_maximo ?? 'N/A' }}
+                                </p>
+                            @endif
                         </div>
                     @endforeach
+
                     <div>
                         <label for="observaciones" class="block text-sm font-medium text-slate-300 mb-1">Observaciones del
                             Análisis (Opcional)</label>
@@ -113,7 +138,6 @@
                 <div class="mt-8 flex justify-end gap-4">
                     <a href="{{ route('analisis.index') }}"
                         class="py-2 px-4 border border-gray-600 rounded-md text-sm font-medium text-slate-200 hover:bg-gray-700">Cancelar</a>
-                    {{-- Este botón ahora abre el modal, no envía el formulario directamente --}}
                     <button type="submit"
                         class="py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700">
                         Revisar y Guardar Análisis
