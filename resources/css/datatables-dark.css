@@ -1,11 +1,23 @@
 /* resources/css/datatables-dark.css */
 
-/* Contenedor principal de la tabla */
-.dt-container {
-    color: #d1d5db;
+/* Controles responsivos */
+.dt-layout-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+}
+.dt-length,
+.dt-search {
+    flex: 1 1 200px;
+}
+.dt-search input {
+    width: 100%;
 }
 
-/* Inputs (Buscador y selector de longitud) */
+/* Inputs generales */
 .dt-search input,
 .dt-input {
     background-color: #1f2937 !important;
@@ -13,9 +25,6 @@
     color: #d1d5db !important;
     border-radius: 0.5rem;
     margin-left: 0.5rem;
-}
-.dt-search input::placeholder {
-    color: #6b7280;
 }
 .dt-search label,
 .dt-length label,
@@ -36,27 +45,28 @@ table.dataTable thead th {
 table.dataTable tbody td {
     color: #d1d5db;
     border-color: #374151 !important;
+    padding: 0.75rem 0.5rem !important;
 }
 
-/* Estilo de filas impares que preferías */
+/* Estilo de filas y hover */
 table.dataTable tbody tr:nth-child(odd) {
-    background-color: rgba(31, 41, 55, 0.5); /* Efecto cebra sutil */
+    background-color: rgba(31, 41, 55, 0.5);
 }
-
-/* Hover para las filas de datos */
 table.dataTable tbody tr:hover {
-    background-color: #374151 !important; /* bg-gray-700 */
+    background-color: #374151 !important;
 }
 
 /* Estilos para las filas de agrupamiento (RowGroup) */
 table.dataTable tr.dtrg-group {
-    background-color: #111827 !important; /* Color oscuro y distintivo (bg-gray-900) */
+    background-color: #111827 !important;
     color: #f3f4f6 !important;
     font-weight: bold;
 }
-/* CORRECCIÓN: Eliminamos el efecto hover para la fila de grupo */
 table.dataTable tr.dtrg-group:hover {
-    background-color: #111827 !important; /* Mismo color que el estado normal, sin cambios */
+    background-color: #111827 !important;
+}
+table.dataTable tr.dtrg-group td {
+    width: 100%;
 }
 
 /* Paginación */
@@ -84,6 +94,33 @@ table.dataTable tr.dtrg-group:hover {
     color: #6b7280 !important;
 }
 
-table.dataTable tr.dtrg-group td {
-    width: 100%;
+/* Fila de "Tabla Vacía" */
+table.dataTable > tbody > tr > td.dataTables_empty {
+    padding: 2.5rem 1rem !important;
+    text-align: center !important;
+    color: #6b7280 !important;
+    font-style: italic;
+}
+
+/* --- SECCIÓN CORREGIDA Y MEJORADA PARA MÓVILES --- */
+@media (max-width: 640px) {
+    /* Hacemos más pequeños el input de búsqueda y el selector de registros */
+    .dt-search input,
+    .dt-input {
+        font-size: 0.875rem !important; /* text-sm */
+        padding: 0.4rem 0.6rem !important; /* Padding más pequeño */
+    }
+
+    /* Hacemos más pequeño el texto "Mostrando X de Y" y "Mostrar X registros" */
+    .dt-info,
+    .dt-length {
+        font-size: 0.75rem !important; /* text-xs */
+    }
+
+    /* Hacemos más pequeños los botones de paginación */
+    .dt-paging .dt-paging-button {
+        padding: 0.3rem 0.8rem !important; /* Ajusta el padding para que los símbolos se vean bien */
+        font-size: 0.875rem !important;
+        line-height: 1.25rem !important;
+    }
 }

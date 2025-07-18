@@ -9,6 +9,7 @@ import "./vendor/dataTables.js";
 import "./vendor/dataTables.tailwindcss.js";
 import "./vendor/dataTables.rowGroup.min.js";
 import "./vendor/dataTables.responsive.min.js";
+
 import Chart from "chart.js/auto";
 
 // --- 2. INICIALIZADOR PRINCIPAL ---
@@ -58,9 +59,21 @@ $(function () {
 
     // --- Lógica para DataTables ---
     const defaultDtOptions = {
-        layout: { topStart: "pageLength", topEnd: "search" },
+        layout: {
+            topStart: "pageLength",
+            topEnd: "search",
+        },
         language: {
             url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/es-ES.json",
+            // --- INICIO DE LA CORRECCIÓN ---
+            // Sobrescribimos el texto de la paginación para usar símbolos
+            paginate: {
+                first: "<<",
+                previous: "<",
+                next: ">",
+                last: ">>",
+            },
+            // --- FIN DE LA CORRECCIÓN ---
         },
         responsive: {
             details: {
@@ -81,7 +94,11 @@ $(function () {
             },
         },
         columnDefs: [
-            { targets: "no-sort", orderable: false, className: "dt-center" },
+            {
+                targets: "no-sort",
+                orderable: false,
+                className: "dt-center",
+            },
         ],
     };
 

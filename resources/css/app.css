@@ -6,6 +6,7 @@
 @import "./vendor/select2.min.css";
 @import "./vendor/rowGroup.dataTables.min.css";
 
+
 /* Custom Themes */
 @import "./datatables-dark.css";
 @import "./select2-dark.css";
