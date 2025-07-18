@@ -21,6 +21,41 @@ $(function () {
         });
     }
 
+    // **NUEVO: FILTRO PERSONALIZADO DE FECHAS**
+    // Esta función le enseña a DataTables a entender y filtrar por un rango de fechas.
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        // Solo aplicamos este filtro a la tabla de actividades
+        if (settings.nTable.id !== "actividadesTable") {
+            return true;
+        }
+
+        let minDateStr = $("#min").val();
+        let maxDateStr = $("#max").val();
+        let cellDateStr = data[0].split(" ")[0]; // Obtenemos la parte 'dd/mm/yyyy' de la celda
+
+        if (!minDateStr && !maxDateStr) {
+            return true;
+        } // No hay filtros, mostrar todo
+
+        // Convertimos las fechas a un formato comparable (YYYY-MM-DD)
+        let minDate = minDateStr ? new Date(minDateStr) : null;
+        let maxDate = maxDateStr ? new Date(maxDateStr) : null;
+        let cellDate = new Date(cellDateStr.split("/").reverse().join("-"));
+
+        // Ajustamos las horas para asegurar que el rango sea inclusivo
+        if (minDate) minDate.setHours(0, 0, 0, 0);
+        if (maxDate) maxDate.setHours(23, 59, 59, 999);
+
+        if (
+            (minDate === null && cellDate <= maxDate) ||
+            (minDate <= cellDate && maxDate === null) ||
+            (minDate <= cellDate && cellDate <= maxDate)
+        ) {
+            return true; // La fecha está en el rango, mostrar fila
+        }
+        return false; // La fecha está fuera de rango, ocultar fila
+    });
+
     // --- Lógica para DataTables ---
     const defaultDtOptions = {
         layout: { topStart: "pageLength", topEnd: "search" },
@@ -131,9 +166,21 @@ $(function () {
                 clickedButton.addClass("ring-2 ring-red-500 scale-105");
             });
         }
+
+        // LÓGICA PARA ACTIVAR EL FILTRO DE FECHAS EN LA TABLA DE ACTIVIDADES
+        if (tableId === "actividadesTable") {
+            $("#min, #max").on("change", function () {
+                dataTableInstance.draw();
+            });
+            $("#clearFilterBtn").on("click", function () {
+                $("#min").val("");
+                $("#max").val("");
+                dataTableInstance.draw();
+            });
+        }
     });
 
-    // --- 3. Lógica para el Gráfico del Dashboard ---
+    // --- Lógica para el Gráfico del Dashboard ---
     const chartCanvas = document.getElementById("lotesPorEstadoChart");
     if (chartCanvas && chartCanvas.dataset.chartData) {
         try {

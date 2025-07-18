@@ -8,6 +8,7 @@ use App\Models\Analisis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Actividad;
 
 class AnalisisController extends Controller
 {
@@ -46,23 +47,23 @@ class AnalisisController extends Controller
             'observaciones' => 'nullable|string',
         ]);
 
-        // Usamos una transacción para asegurar que todo se guarde correctamente o no se guarde nada
-        DB::transaction(function () use ($request, $lote) {
-            $especificaciones = Especificacion::where('categoria_id', $lote->producto->categoria_id)->get()->keyBy('parametro_id');
+        $resultadoGeneral = 'Pasa';
+
+        DB::transaction(function () use ($request, $lote, &$resultadoGeneral) {
+            $especificaciones = \App\Models\Especificacion::where('categoria_id', $lote->producto->categoria_id)->get()->keyBy('parametro_id');
             $todosPasan = true;
             $resultadosAGuardar = [];
 
-            // 1. Primero, procesamos y validamos todos los resultados en memoria
             foreach ($request->resultados as $parametro_id => $valor_resultado) {
+                // CORRECCIÓN: Definimos $aprueba aquí para que siempre exista
+                $aprueba = true;
+
                 $especificacion = $especificaciones[$parametro_id] ?? null;
-                $aprueba = true; // Asumimos que aprueba por defecto
 
                 if ($especificacion) {
                     if (isset($especificacion->valor_texto)) {
-                        // Validación por texto (ignorando mayúsculas/minúsculas)
                         $aprueba = (strtolower($valor_resultado) == strtolower($especificacion->valor_texto));
                     } else {
-                        // Validación numérica
                         $valor_resultado_num = floatval($valor_resultado);
                         if ((isset($especificacion->valor_minimo) && $valor_resultado_num < $especificacion->valor_minimo) ||
                             (isset($especificacion->valor_maximo) && $valor_resultado_num > $especificacion->valor_maximo)
@@ -73,7 +74,7 @@ class AnalisisController extends Controller
                 }
 
                 if (!$aprueba) {
-                    $todosPasan = false; // Si uno falla, el resultado general falla
+                    $todosPasan = false;
                 }
 
                 $resultadosAGuardar[] = [
@@ -83,22 +84,30 @@ class AnalisisController extends Controller
                 ];
             }
 
-            // 2. Ahora, creamos el registro principal del análisis con el resultado general ya calculado
+            if (!$todosPasan) {
+                $resultadoGeneral = 'No Pasa';
+            }
+
             $analisis = $lote->analisis()->create([
                 'usuario_id' => Auth::id(),
                 'version' => ($lote->analisis()->max('version') ?? 0) + 1,
-                'resultado_general' => $todosPasan ? 'Pasa' : 'No Pasa',
+                'resultado_general' => $resultadoGeneral,
                 'fecha_analisis' => now(),
                 'observaciones' => $request->observaciones,
             ]);
 
-            // 3. Finalmente, guardamos los resultados individuales
             $analisis->resultados()->createMany($resultadosAGuardar);
 
-            // Actualizamos el estado del lote para que pase a la cola del administrador.
             $lote->estado = 'Pendiente de Aprobación';
             $lote->save();
         });
+
+        Actividad::create([
+            'usuario_id' => Auth::id(),
+            'tipo_accion' => 'ANÁLISIS',
+            'descripcion' => "Registró el análisis v{$lote->analisis()->latest()->first()->version} para el lote #{$lote->id} ({$lote->producto->nombre}) con resultado: {$resultadoGeneral}.",
+            'ip_address' => $request->ip(),
+        ]);
 
         return redirect()->route('analisis.index')->with('success', 'Análisis del lote #' . $lote->id . ' guardado exitosamente.');
     }
@@ -132,10 +141,17 @@ class AnalisisController extends Controller
     /**
      * Cambia el estado de un lote a "Listo para Producción".
      */
-    public function aprobar(Lote $lote)
+    public function aprobar(Request $request, Lote $lote) // <-- CORRECCIÓN 2: Añadimos Request $request
     {
         $lote->estado = 'Listo para Producción';
         $lote->save();
+
+        Actividad::create([
+            'usuario_id' => Auth::id(),
+            'tipo_accion' => 'DECISIÓN',
+            'descripcion' => "APROBÓ el lote #{$lote->id} ({$lote->producto->nombre}).",
+            'ip_address' => $request->ip(),
+        ]);
 
         return redirect()->route('aprobaciones.index')->with('success', "El lote #{$lote->id} ha sido APROBADO.");
     }
@@ -143,10 +159,17 @@ class AnalisisController extends Controller
     /**
      * Cambia el estado de un lote a "Rechazado".
      */
-    public function rechazar(Lote $lote)
+    public function rechazar(Request $request, Lote $lote) // <-- CORRECCIÓN 2: Añadimos Request $request
     {
         $lote->estado = 'Rechazado';
         $lote->save();
+
+        Actividad::create([
+            'usuario_id' => Auth::id(),
+            'tipo_accion' => 'DECISIÓN',
+            'descripcion' => "RECHAZÓ el lote #{$lote->id} ({$lote->producto->nombre}).",
+            'ip_address' => $request->ip(),
+        ]);
 
         return redirect()->route('aprobaciones.index')->with('success', "El lote #{$lote->id} ha sido RECHAZADO.");
     }

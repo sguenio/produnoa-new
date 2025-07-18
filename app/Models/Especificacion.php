@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Especificacion extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     // Le decimos a Eloquent que esta tabla no sigue la convención de pluralización
     protected $table = 'categorias_parametros_especificaciones';

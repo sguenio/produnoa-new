@@ -214,6 +214,18 @@
                     </svg>
                     Historial de Disposiciones
                 </a>
+                <a href="{{ route('actividades.index') }}"
+                    class="group flex items-center py-2 px-2 text-sm font-medium rounded-md {{ request()->routeIs('actividades.index') ? 'bg-gray-700 text-red-500' : 'text-slate-300 hover:bg-gray-700 hover:text-red-500' }}">
+                    <svg class="mr-3 h-5 w-5 shrink-0 {{ request()->routeIs('actividades.index') ? 'text-red-400' : 'text-slate-500 group-hover:text-red-400' }}"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9" />
+                        <path d="M4 20h4v-4" />
+                        <path d="M4 12h12v-4" />
+                        <path d="M4 4h4V4" />
+                    </svg>
+                    Log de Actividad
+                </a>
             </div>
         @endif
     </nav>
