@@ -16,18 +16,12 @@ class Usuario extends Authenticatable
 
     protected $fillable = [
         'nombre',
+        'apellido',
         'email',
         'password',
         'rol',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    protected $hidden = ['password', 'remember_token'];
+    protected $casts = ['email_verified_at' => 'datetime', 'password' => 'hashed'];
 }

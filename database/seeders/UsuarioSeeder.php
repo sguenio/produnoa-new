@@ -11,22 +11,21 @@ class UsuarioSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+    // database/seeders/UsuarioSeeder.php
     public function run(): void
     {
-        // Usamos el modelo para crear, es una mejor práctica
-        // y nos aseguramos de que las contraseñas se encripten automáticamente
-        // gracias a la configuración del 'cast' en el modelo.
         \App\Models\Usuario::create([
-            'nombre' => 'Admin General',
+            'nombre' => 'Admin',
+            'apellido' => 'General', // <-- AÑADIR
             'email' => 'admin@produnoa.com',
-            'rol' => 'Administrador', // 'rol' en minúscula
-            'password' => '12345678', // Laravel lo encriptará automáticamente
+            'rol' => 'Administrador',
+            'password' => '12345678',
         ]);
-
         \App\Models\Usuario::create([
-            'nombre' => 'Operario de Prueba',
+            'nombre' => 'Operario',
+            'apellido' => 'Prueba', // <-- AÑADIR
             'email' => 'operario@produnoa.com',
-            'rol' => 'Operario', // 'rol' en minúscula
+            'rol' => 'Operario',
             'password' => '12345678',
         ]);
     }
