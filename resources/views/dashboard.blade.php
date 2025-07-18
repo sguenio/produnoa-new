@@ -78,9 +78,28 @@
             </div>
         </div>
         <div class="lg:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700/50">
-            <h3 class="text-lg font-semibold text-slate-200">Actividad Reciente</h3>
-            <div class="mt-4 h-80 flex items-center justify-center">
-                <p class="text-slate-500 text-sm">Próximamente...</p>
+            <h3 class="text-lg font-semibold text-slate-200 mb-4">Actividad Reciente</h3>
+            <div class="space-y-4">
+                @forelse($stats['actividadesRecientes'] as $actividad)
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <span
+                                class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-700 text-gray-400">
+                                <span
+                                    class="text-sm font-medium leading-none">{{ strtoupper(substr($actividad->usuario->nombre ?? 'S', 0, 1)) }}</span>
+                            </span>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-slate-300">{!! Str::of($actividad->descripcion)->replaceMatches(
+                                '/#\d+/',
+                                fn($match) => "<strong class='font-mono text-amber-400'>{$match[0]}</strong>",
+                            ) !!}</p>
+                            <p class="text-xs text-slate-500">{{ $actividad->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-sm text-slate-500">No hay actividad reciente.</p>
+                @endforelse
             </div>
         </div>
     </div>

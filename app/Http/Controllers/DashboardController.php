@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lote;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Importante para consultas directas
+use App\Models\Actividad; // <-- Importa el modelo Actividad
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -15,27 +15,19 @@ class DashboardController extends Controller
         $stats = [];
 
         // --- Estadísticas para las Tarjetas ---
-        // Esta es visible para todos
         $stats['lotesEnCuarentena'] = Lote::where('estado', 'En Cuarentena')->count();
-
-        // Estas solo se calculan para el Administrador
         if ($user->rol === 'Administrador') {
             $stats['lotesPendientesAprobacion'] = Lote::where('estado', 'Pendiente de Aprobación')->count();
             $stats['lotesParaDisposicion'] = Lote::where('estado', 'Rechazado')->doesntHave('disposicion')->count();
         }
 
         // --- Datos para el Gráfico de Pastel ---
-        // Contamos todos los lotes y los agrupamos por su estado
-        $lotesPorEstado = Lote::select('estado', DB::raw('count(*) as total'))
-            ->groupBy('estado')
-            ->get()
-            ->pluck('total', 'estado');
+        $lotesPorEstado = Lote::select('estado', DB::raw('count(*) as total'))->groupBy('estado')->get()->pluck('total', 'estado');
+        $stats['chartData'] = ['labels' => $lotesPorEstado->keys(), 'data' => $lotesPorEstado->values()];
 
-        // Preparamos los datos para que el gráfico los entienda fácilmente
-        $stats['chartData'] = [
-            'labels' => $lotesPorEstado->keys(),
-            'data' => $lotesPorEstado->values(),
-        ];
+        // --- AÑADIMOS LA LÓGICA PARA ACTIVIDAD RECIENTE ---
+        // Obtenemos las últimas 7 actividades, cargando la relación con el usuario
+        $stats['actividadesRecientes'] = Actividad::with('usuario')->latest()->take(7)->get();
 
         return view('dashboard', compact('stats'));
     }
