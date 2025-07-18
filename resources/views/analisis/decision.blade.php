@@ -83,11 +83,17 @@
         </div>
 
         {{-- Observaciones y Decisión Final --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-            <div class="md:col-span-2 p-4 bg-gray-900/50 rounded-lg">
-                <h3 class="font-semibold text-slate-200 mb-1">Observaciones del Analista</h3>
-                <p class="text-slate-400 text-sm italic">{{ $analisis->observaciones ?? 'Sin observaciones.' }}</p>
+        {{-- 1. Cambiamos 'items-start' por 'items-stretch' para que ambas columnas tengan la misma altura --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+
+            {{-- 2. Hacemos que el contenedor de observaciones sea un flexbox vertical --}}
+            <div class="md:col-span-2 p-4 bg-gray-900/50 rounded-lg flex flex-col">
+                <h3 class="font-semibold text-slate-200 mb-1 shrink-0">Observaciones del Analista</h3>
+                {{-- 3. Hacemos que el párrafo crezca para ocupar el espacio disponible --}}
+                <p class="text-slate-400 text-sm italic flex-grow">{{ $analisis->observaciones ?? 'Sin observaciones.' }}
+                </p>
             </div>
+
             <div class="p-4 bg-gray-900 rounded-lg flex flex-col items-center justify-center gap-4">
                 <p class="font-bold text-lg text-slate-200">Veredicto Final:
                     @if ($analisis->resultado_general == 'Pasa')
@@ -97,15 +103,13 @@
                     @endif
                 </p>
                 <div class="flex w-full gap-2">
-                    <form action="{{ route('lotes.rechazar', $analisis->lote_id) }}" method="POST" class="w-full"
-                        onsubmit="return confirm('¿Confirmas el RECHAZO de este lote?');">
+                    <form action="{{ route('lotes.rechazar', $analisis->lote_id) }}" method="POST" class="w-full">
                         @csrf
                         <button type="submit"
-                            class="w-full py-2 px-4 border border-red-500/50 rounded-md text-sm font-medium text-red-300 hover:bg-red-500/20">Rechazar
+                            class="w-full py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700">Rechazar
                             Lote</button>
                     </form>
-                    <form action="{{ route('lotes.aprobar', $analisis->lote_id) }}" method="POST" class="w-full"
-                        onsubmit="return confirm('¿Confirmas la APROBACIÓN de este lote?');">
+                    <form action="{{ route('lotes.aprobar', $analisis->lote_id) }}" method="POST" class="w-full">
                         @csrf
                         <button type="submit"
                             class="w-full py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700">Aprobar
